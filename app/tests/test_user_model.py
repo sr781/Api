@@ -1,8 +1,7 @@
 from app.server import db, app as flask_app
 from app.tests.base import BaseTestCase
 from app.server.models.user.models import User
-
-import logging
+from werkzeug.security import check_password_hash
 
 
 def create_user(email="test@example.com", password="testpass123"):
@@ -18,13 +17,14 @@ def create_user(email="test@example.com", password="testpass123"):
 
 class UserModelTests(BaseTestCase):
     def test_user_create_success(self, app):
-        log = logging.getLogger( "SomeTest.testSomething" )
-
         create_user()
 
         with flask_app.app_context():
             users = User.query.all()
+
             self.assertEqual(len(users), 1)
+            self.assertEqual(users[0].email, "test@example.com")
+            self.assertTrue(check_password_hash(users[0].password, "testpass123"))
 
     def test_user_delete_success(self, app):
 
