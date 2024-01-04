@@ -7,7 +7,7 @@ from app.manage import app as flask_app
 
 class TestDevConfig(AppTestCase):
     def create_app(self) -> Union[Flask, Iterator[Flask]]:
-        flask_app.config.from_object("app.server.config.DevConfig")
+        flask_app.config.from_object("app.config.DevConfig")
         return flask_app
 
     def test_app_is_development(self, app):
@@ -19,7 +19,7 @@ class TestDevConfig(AppTestCase):
 
 class TestTestConfig(AppTestCase):
     def create_app(self) -> Union[Flask, Iterator[Flask]]:
-        flask_app.config.from_object("app.server.config.TestConfig")
+        flask_app.config.from_object("app.config.TestConfig")
         return flask_app
 
     def test_app_is_testing(self, app):

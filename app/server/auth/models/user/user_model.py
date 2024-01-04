@@ -1,7 +1,9 @@
 from app.database import db
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token
-from sqlalchemy.exc import NoResultFound
+from flask_jwt_extended import create_access_token, get_jwt_identity
+from sqlalchemy.exc import NoResultFound, OperationalError, IntegrityError
+
+import time
 
 
 class User(db.Model):
@@ -16,20 +18,41 @@ class User(db.Model):
         self.password = generate_password_hash(password)
 
     @staticmethod
-    def get_user(email, password):
+    def get_user(id):
+        """TODO: ADD EMAIL PASSWORD CHECK BACK IN."""
         try:
-            user = db.session.get(User, ident={"email": email})
-            if check_password_hash(user.password, password):
-                return user
-            else:
-                return False
+            user = db.session.get(User, ident=id)
+            return user
         except NoResultFound:
             return False
 
+    def create_jwt_token(self):
+        return create_access_token(self.email)
+
     @staticmethod
-    def create_jwt_token(email):
-        return create_access_token(identity=email)
+    def refresh_jwt_token(func):
+        return create_access_token(func)
 
     def add_user(self):
-        db.session.add(self)
+        num_retries = 5
+        user_registration_success = False
+
+        while num_retries > 0:
+            try:
+                self.commit(self)
+                user_registration_success = True
+                break
+            except OperationalError:
+                num_retries -= 1
+                time.sleep(1)
+            except IntegrityError:
+                return False
+            finally:
+                if not user_registration_success:
+                    return False
+                return True
+
+    @staticmethod
+    def commit(obj):
+        db.session.add(obj)
         db.session.commit()

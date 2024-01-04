@@ -23,3 +23,4 @@ class TestConfig(BaseConfig):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = postgres_local_base + database_name + "_test"
     PRESERVE_CONTEXT_ON_EXCEPTION = False
+    JWT_SECRET_KEY = "changeme"
