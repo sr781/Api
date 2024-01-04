@@ -2,7 +2,7 @@ from typing import Union, Iterator
 
 from flask_unittest import AppTestCase
 from flask import Flask, current_app
-from app.server import app as flask_app
+from app.manage import app as flask_app
 
 
 class TestDevConfig(AppTestCase):

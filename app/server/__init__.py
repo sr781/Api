@@ -1,18 +1,22 @@
-import os
-
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
+from flask_jwt_extended import JWTManager
+from app.server.config import TestConfig
+from app.server.api.views import auth_blueprint, AuthAPI
+from app.server.auth.models.user.user_model import User
+from app.database import db as flask_db
 
-app = Flask(__name__)
-CORS(app)
 
-app_config = os.getenv(
-    "APP_CONFIG",
-    "app.server.config.DevConfig"
-)
+def create_app(default_config=TestConfig):
+    """Define the Flask Application"""
 
-app.config.from_object(app_config)
-app.testing = True
+    app = Flask(__name__)
 
-db = SQLAlchemy(app)
+    app.config.from_object(default_config)
+    JWTManager(app)
+    db = flask_db.init_app(app)
+
+    app.register_blueprint(auth_blueprint)
+
+    app.add_url_rule("/auth_api/", endpoint="auth", view_func=AuthAPI.as_view("auth_api", User))
+
+    return app, db
