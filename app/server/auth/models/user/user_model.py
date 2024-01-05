@@ -19,7 +19,7 @@ class User(db.Model):
 
     @staticmethod
     def get_user(id):
-        """TODO: ADD EMAIL PASSWORD CHECK BACK IN."""
+        """TODO: ADD PASSWORD CHECK BACK IN."""
         try:
             user = db.session.get(User, ident=id)
             return user
@@ -47,10 +47,10 @@ class User(db.Model):
                 time.sleep(1)
             except IntegrityError:
                 return False
-            finally:
-                if not user_registration_success:
-                    return False
-                return True
+
+        if not user_registration_success:
+            return False
+        return True
 
     @staticmethod
     def commit(obj):

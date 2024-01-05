@@ -22,13 +22,12 @@ class AuthViewTests(ViewTestCase):
         res = client.post("/auth_api/", data=json.dumps(test_user), content_type="application/json")
         self.assertEqual(res.status_code, 201)
 
-        with app.app_context():
-            user = db.session.execute(db.select(User).filter_by(email=test_user["email"])).scalar_one()
-            self.assertTrue(user is not None)
-            self.assertEqual(user.email, test_user["email"])
+        user = db.session.execute(db.select(User).filter_by(email=test_user["email"])).scalar_one()
+        self.assertTrue(user is not None)
+        self.assertEqual(user.email, test_user["email"])
 
-            data = json.loads(res.data)
-            self.assertIn("token", data)
+        data = json.loads(res.data)
+        self.assertIn("token", data)
 
     def test_register_incomplete_data_raises_error(self, app, client):
         """Test making POST request without email specified raises error."""
@@ -53,9 +52,8 @@ class AuthViewTests(ViewTestCase):
     def test_register_existing_email_raises_error(self, app, client):
         """Test HTTP 400 Error returned if user attempts registration with existing email."""
 
-        with app.app_context():
-            db.session.add(User(email="test@example.com", password="testpass123"))
-            db.session.commit()
+        db.session.add(User(email="test@example.com", password="testpass123"))
+        db.session.commit()
 
         new_user = {
             "email": "test@example.com",

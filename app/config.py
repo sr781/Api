@@ -4,10 +4,11 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 postgres_local_base = "postgresql://postgres:@localhost/"
 database_name = "flask_jwt_auth"
 
+from datetime import timedelta
+
 
 class BaseConfig:
     """Base Configuration."""
-
     SECRET_KEY = os.getenv("FLASK_SECRET", "pass")
     DEBUG = False
 
@@ -23,4 +24,3 @@ class TestConfig(BaseConfig):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = postgres_local_base + database_name + "_test"
     PRESERVE_CONTEXT_ON_EXCEPTION = False
-    JWT_SECRET_KEY = "changeme"

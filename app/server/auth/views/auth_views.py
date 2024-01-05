@@ -1,7 +1,9 @@
 from flask import request, jsonify, Blueprint
 from flask.views import MethodView
 from app.server.auth.models.user.user_model import User
-from app.database import db
+from flask_jwt_extended import get_jwt_identity, set_access_cookies, get_jwt, jwt_required, verify_jwt_in_request
+
+from datetime import datetime, timedelta
 
 
 auth_blueprint = Blueprint("auth", __name__)
@@ -23,10 +25,15 @@ class AuthGroupAPI(MethodView):
             user = User(email=email, password=password)
             if user.add_user():
                 token = user.create_jwt_token()
+                resp = jsonify({"msg": "registration successful"})
+                set_access_cookies(resp, token)
                 data["token"] = token
-                return jsonify(data), 201
-            msg = "Email address already exists."
-            return jsonify({"msg": msg}), 400
+                print("New user created.")
+                return resp, 201
+            else:
+                print("hello.......")
+                msg = "Email address already exists."
+                return jsonify({"msg": msg}), 400
         except KeyError:
             error_msg = "Please provide both an email and a password"
             return jsonify({"msg": error_msg}), 400
@@ -37,9 +44,16 @@ class AuthItemAPI(MethodView):
     def __init__(self, model):
         self.model = model
 
-    def _get_item(self, item_id):
+    @staticmethod
+    def _get_item(item_id):
         return User.get_user(item_id)
 
+    @jwt_required()
     def get(self, item_id):
         user = self._get_item(item_id)
-        return jsonify({"email": user.email}), 200
+        if user:
+            print("FOUND USER:", user)
+            return jsonify({"email": user.email}), 200
+        else:
+            print("USER NOT FOUND")
+            return 400

@@ -1,4 +1,3 @@
-from app.manage import app as flask_app
 from app.database import db
 from app.tests.base import BaseTestCase
 from app.server.auth.models.user.user_model import User
@@ -7,22 +6,16 @@ from werkzeug.security import check_password_hash
 from unittest.mock import patch
 
 
-def create_user(email="test@example.com", password="testpass123"):
-    with flask_app.app_context():
-        user = User(
-            email=email,
-            password=password
-        )
-        db.session.add(user)
-        db.session.commit()
-        return user
-
-
 class UserModelTests(BaseTestCase):
     def test_user_create_success(self, app):
-        create_user()
 
-        with flask_app.app_context():
+        with app.app_context():
+            user = User(
+                email="test@example.com",
+                password="testpass123"
+            )
+            db.session.add(user)
+            db.session.commit()
             users = User.query.all()
 
             self.assertEqual(len(users), 1)
@@ -31,9 +24,13 @@ class UserModelTests(BaseTestCase):
 
     def test_user_delete_success(self, app):
 
-        create_user()
-
-        with flask_app.app_context():
+        with app.app_context():
+            user = User(
+                email="test@example.com",
+                password="testpass123"
+            )
+            db.session.add(user)
+            db.session.commit()
             users = User.query.all()
             self.assertEqual(len(users), 1)
 
@@ -48,13 +45,17 @@ class UserModelTests(BaseTestCase):
     def test_create_jwt_token(self, app, patched_token):
         """Test creating JWT token for given user successful."""
 
-        create_user()
-
         token_dict = {
             "access_token": "test_token"
         }
 
-        with flask_app.app_context():
+        with app.app_context():
+            user = User(
+                email="test@example.com",
+                password="testpass123"
+            )
+            db.session.add(user)
+            db.session.commit()
             user = db.session.get(User, ident=1)
             patched_token.return_value = token_dict
             token = User.create_jwt_token(user.email)
