@@ -26,6 +26,16 @@ class User(db.Model):
         except NoResultFound:
             return False
 
+    def get_user_with_credentials(self, password):
+        user = User.query.filter_by(email=self.email).first()
+        if user:
+            if check_password_hash(user.password, password):
+                return user
+            else:
+                return False
+        else:
+            return "not found"
+
     def create_jwt_token(self):
         return create_access_token(self.email)
 

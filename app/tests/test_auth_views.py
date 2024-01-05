@@ -27,7 +27,7 @@ class AuthViewTests(ViewTestCase):
         self.assertEqual(user.email, test_user["email"])
 
         data = json.loads(res.data)
-        self.assertIn("token", data)
+        self.assertEqual(data["msg"], "registration successful")
 
     def test_register_incomplete_data_raises_error(self, app, client):
         """Test making POST request without email specified raises error."""
@@ -65,8 +65,44 @@ class AuthViewTests(ViewTestCase):
         data = json.loads(res.data)
         self.assertEqual(data["msg"], "Email address already exists.")
 
-    # def test_logout(self):
-    #     pass
-    #
-    # def test_update_user(self):
-    #     pass
+    def test_login(self, app, client):
+
+        test_user = {
+            "email": "test@example.com",
+            "password": "testpass123"
+        }
+
+        client.post("/auth_api/", data=json.dumps(test_user), content_type="application/json")
+
+        res = client.post("/auth_api/login", data=json.dumps(test_user), content_type="application/json")
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["id"], 1)
+        self.assertEqual(data["msg"], "Login successful.")
+
+    def test_login_with_email_400_error(self, app, client):
+
+        test_user = {
+            "email": "nouser@example.com",
+            "password": "testpass123"
+        }
+        res = client.post("/auth_api/login", data=json.dumps(test_user), content_type="application/json")
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data["msg"], "Email not found. Please try again.")
+
+    def test_login_with_incorrect_password_400_error(self, app, client):
+
+        test_user = {
+            "email": "test@example.com",
+            "password": "testpass123"
+        }
+
+        client.post("/auth_api/", data=json.dumps(test_user), content_type="application/json")
+
+        test_user["password"] = "wrongpassword"
+
+        res = client.post("/auth_api/login", data=json.dumps(test_user), content_type="application/json")
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data["msg"], "Incorrect password. Please try again.")

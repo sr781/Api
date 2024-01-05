@@ -57,3 +57,47 @@ class AuthItemAPI(MethodView):
         else:
             print("USER NOT FOUND")
             return 400
+
+
+class LoginAPI(MethodView):
+    """View to log in a user."""
+
+    def __init__(self, model):
+        self.model = model
+
+    @staticmethod
+    def post():
+        """Login user"""
+
+        data = request.json
+        try:
+            email = data["email"]
+            password = data["password"]
+
+            user = User(email=email, password=password)
+            db_result = user.get_user_with_credentials(password)
+
+            if isinstance(db_result, User):
+                token = user.create_jwt_token()
+                success_msg = "Login successful."
+                user_dict = {"msg": success_msg}
+
+                user_dict["id"] = db_result.id
+                resp = jsonify(user_dict)
+                set_access_cookies(resp, token)
+                return resp, 200
+            elif db_result == "not found":
+                error_msg = "Email not found. Please try again."
+                return jsonify({"msg": error_msg}), 400
+            else:
+                error_msg = "Incorrect password. Please try again."
+                return jsonify({"msg": error_msg}), 400
+
+        except KeyError:
+            error_msg = "Please provide both an email and a password."
+            return jsonify({"msg": error_msg}), 400
+
+
+
+
+
