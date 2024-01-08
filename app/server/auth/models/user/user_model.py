@@ -7,6 +7,7 @@ import time
 
 
 class AuthUser(db.Model):
+    """Model to represent an auth user in the DB."""
     __tablename__ = "auth_users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -44,6 +45,7 @@ class AuthUser(db.Model):
         return create_access_token(func)
 
     def add_user(self):
+        """TODO: TEST OPERATIONAL FAILURE"""
         num_retries = 5
         user_registration_success = False
 

@@ -1,21 +1,8 @@
 from app.tests.base import BaseTestCase
+from app.tests.api_tests.helpers import create_user
 from app.server.api.models.user_model import User
 
 from app.database import db
-
-
-def create_user():
-    name = "Test User"
-    username = "testusername"
-    email = "test@example.com"
-    phone = "1234567890"
-
-    user = User(name=name, username=username, email=email, phone=phone)
-
-    db.session.add(user)
-    db.session.commit()
-
-    return user
 
 
 class UserModelTests(BaseTestCase):
