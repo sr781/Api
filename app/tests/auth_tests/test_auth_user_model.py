@@ -6,7 +6,7 @@ from werkzeug.security import check_password_hash
 from unittest.mock import patch
 
 
-class UserModelTests(BaseTestCase):
+class AuthUserModelTests(BaseTestCase):
     def test_user_create_success(self, app):
 
         with app.app_context():
