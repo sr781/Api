@@ -1,6 +1,6 @@
 from app.database import db
 from app.tests.base import BaseTestCase
-from app.server.auth.models.user.user_model import User
+from app.server.auth.models.user.user_model import AuthUser
 from werkzeug.security import check_password_hash
 
 from unittest.mock import patch
@@ -10,13 +10,13 @@ class UserModelTests(BaseTestCase):
     def test_user_create_success(self, app):
 
         with app.app_context():
-            user = User(
+            user = AuthUser(
                 email="test@example.com",
                 password="testpass123"
             )
             db.session.add(user)
             db.session.commit()
-            users = User.query.all()
+            users = AuthUser.query.all()
 
             self.assertEqual(len(users), 1)
             self.assertEqual(users[0].email, "test@example.com")
@@ -25,23 +25,23 @@ class UserModelTests(BaseTestCase):
     def test_user_delete_success(self, app):
 
         with app.app_context():
-            user = User(
+            user = AuthUser(
                 email="test@example.com",
                 password="testpass123"
             )
             db.session.add(user)
             db.session.commit()
-            users = User.query.all()
+            users = AuthUser.query.all()
             self.assertEqual(len(users), 1)
 
-            user = db.session.get(User, ident=1)
+            user = db.session.get(AuthUser, ident=1)
             db.session.delete(user)
             db.session.commit()
 
-            users = User.query.all()
+            users = AuthUser.query.all()
             self.assertEqual(len(users), 0)
 
-    @patch.object(User, "create_jwt_token")
+    @patch.object(AuthUser, "create_jwt_token")
     def test_create_jwt_token(self, app, patched_token):
         """Test creating JWT token for given user successful."""
 
@@ -50,13 +50,13 @@ class UserModelTests(BaseTestCase):
         }
 
         with app.app_context():
-            user = User(
+            user = AuthUser(
                 email="test@example.com",
                 password="testpass123"
             )
             db.session.add(user)
             db.session.commit()
-            user = db.session.get(User, ident=1)
+            user = db.session.get(AuthUser, ident=1)
             patched_token.return_value = token_dict
-            token = User.create_jwt_token(user.email)
+            token = AuthUser.create_jwt_token(user.email)
             self.assertEqual(token, token_dict)

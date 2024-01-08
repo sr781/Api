@@ -1,4 +1,4 @@
-from app.server.auth.models.user.user_model import User
+from app.server.auth.models.user.user_model import AuthUser
 from flask_jwt_extended import get_jwt_identity, set_access_cookies, get_jwt
 from datetime import datetime, timedelta
 from flask import Blueprint
@@ -16,7 +16,7 @@ def refresh(response):
         timestamp = datetime.timestamp(now + timedelta(seconds=5))
         if timestamp > exp:
             print("HELLO!")
-            access_token = User.refresh_jwt_token(get_jwt_identity)
+            access_token = AuthUser.refresh_jwt_token(get_jwt_identity)
             set_access_cookies(response, access_token)
             return response
     except (RuntimeError, KeyError):

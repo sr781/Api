@@ -6,7 +6,7 @@ from sqlalchemy.exc import NoResultFound, OperationalError, IntegrityError
 import time
 
 
-class User(db.Model):
+class AuthUser(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -21,13 +21,13 @@ class User(db.Model):
     def get_user(id):
         """TODO: ADD PASSWORD CHECK BACK IN."""
         try:
-            user = db.session.get(User, ident=id)
+            user = db.session.get(AuthUser, ident=id)
             return user
         except NoResultFound:
             return False
 
     def get_user_with_credentials(self, password):
-        user = User.query.filter_by(email=self.email).first()
+        user = AuthUser.query.filter_by(email=self.email).first()
         if user:
             if check_password_hash(user.password, password):
                 return user

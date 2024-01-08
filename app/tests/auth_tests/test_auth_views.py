@@ -1,7 +1,7 @@
 """Unit Tests for Authorization Views"""
 
 from app.tests.base import ViewTestCase
-from app.server.auth.models.user.user_model import User
+from app.server.auth.models.user.user_model import AuthUser
 from app.database import db
 
 import json
@@ -22,7 +22,7 @@ class AuthViewTests(ViewTestCase):
         res = client.post("/auth_api/", data=json.dumps(test_user), content_type="application/json")
         self.assertEqual(res.status_code, 201)
 
-        user = db.session.execute(db.select(User).filter_by(email=test_user["email"])).scalar_one()
+        user = db.session.execute(db.select(AuthUser).filter_by(email=test_user["email"])).scalar_one()
         self.assertTrue(user is not None)
         self.assertEqual(user.email, test_user["email"])
 
@@ -52,7 +52,7 @@ class AuthViewTests(ViewTestCase):
     def test_register_existing_email_raises_error(self, app, client):
         """Test HTTP 400 Error returned if user attempts registration with existing email."""
 
-        db.session.add(User(email="test@example.com", password="testpass123"))
+        db.session.add(AuthUser(email="test@example.com", password="testpass123"))
         db.session.commit()
 
         new_user = {
@@ -86,6 +86,7 @@ class AuthViewTests(ViewTestCase):
             "email": "nouser@example.com",
             "password": "testpass123"
         }
+
         res = client.post("/auth_api/login", data=json.dumps(test_user), content_type="application/json")
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 400)

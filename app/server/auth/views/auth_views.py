@@ -1,9 +1,7 @@
 from flask import request, jsonify, Blueprint
 from flask.views import MethodView
-from app.server.auth.models.user.user_model import User
+from app.server.auth.models.user.user_model import AuthUser
 from flask_jwt_extended import get_jwt_identity, set_access_cookies, get_jwt, jwt_required, verify_jwt_in_request
-
-from datetime import datetime, timedelta
 
 
 auth_blueprint = Blueprint("auth", __name__)
@@ -12,7 +10,7 @@ auth_blueprint = Blueprint("auth", __name__)
 class AuthGroupAPI(MethodView):
     init_every_request = True
 
-    def __init__(self, model: User):
+    def __init__(self, model: AuthUser):
         self.model = model
 
     @staticmethod
@@ -22,7 +20,7 @@ class AuthGroupAPI(MethodView):
             email = data["email"]
             password = data["password"]
 
-            user = User(email=email, password=password)
+            user = AuthUser(email=email, password=password)
             if user.add_user():
                 token = user.create_jwt_token()
                 resp = jsonify({"msg": "registration successful"})
@@ -46,7 +44,7 @@ class AuthItemAPI(MethodView):
 
     @staticmethod
     def _get_item(item_id):
-        return User.get_user(item_id)
+        return AuthUser.get_user(item_id)
 
     @jwt_required()
     def get(self, item_id):
@@ -74,10 +72,10 @@ class LoginAPI(MethodView):
             email = data["email"]
             password = data["password"]
 
-            user = User(email=email, password=password)
+            user = AuthUser(email=email, password=password)
             db_result = user.get_user_with_credentials(password)
 
-            if isinstance(db_result, User):
+            if isinstance(db_result, AuthUser):
                 token = user.create_jwt_token()
                 success_msg = "Login successful."
                 user_dict = {"msg": success_msg}

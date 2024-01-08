@@ -4,7 +4,7 @@ from flask_cors import CORS
 from app.config import DevConfig, TestConfig
 from app.server.auth.views.auth_views import auth_blueprint, AuthGroupAPI, AuthItemAPI, LoginAPI
 from app.server.auth.views.token_views import token_blueprint
-from app.server.auth.models.user.user_model import User
+from app.server.auth.models.user.user_model import AuthUser
 from app.database import db
 
 from datetime import timedelta
@@ -33,14 +33,14 @@ def create_app(default_config=TestConfig):
     # app.register_blueprint(token_blueprint)
 
     app.add_url_rule(
-        "/auth_api/", endpoint="auth-group", view_func=AuthGroupAPI.as_view("auth_api_group", User)
+        "/auth_api/", endpoint="auth-group", view_func=AuthGroupAPI.as_view("auth_api_group", AuthUser)
     )
     app.add_url_rule(
-        "/auth_api/<int:item_id>", endpoint="auth-item", view_func=AuthItemAPI.as_view("auth_api_item", User)
+        "/auth_api/<int:item_id>", endpoint="auth-item", view_func=AuthItemAPI.as_view("auth_api_item", AuthUser)
     )
 
     app.add_url_rule(
-        "/auth_api/login", endpoint="auth-login", view_func=LoginAPI.as_view("auth_api_login", User)
+        "/auth_api/login", endpoint="auth-login", view_func=LoginAPI.as_view("auth_api_login", AuthUser)
     )
 
     return app
