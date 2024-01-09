@@ -1,10 +1,26 @@
 from flask import request, jsonify, Blueprint
 from flask.views import MethodView
 from app.server.auth.models.user.user_model import AuthUser
-from flask_jwt_extended import get_jwt_identity, set_access_cookies, get_jwt, jwt_required, verify_jwt_in_request
+from flask_jwt_extended import get_jwt_identity, set_access_cookies, jwt_required, get_jwt
+from datetime import datetime, timedelta
 
 
 auth_blueprint = Blueprint("auth", __name__)
+
+
+@auth_blueprint.after_app_request
+def refresh(response):
+    print("HELLO??DS??SF?SDF")
+    try:
+        exp = get_jwt()["exp"]
+        now = datetime.now()
+        timestamp = datetime.timestamp(now + timedelta(seconds=8))
+        if timestamp > exp:
+            access_token = AuthUser.refresh_jwt_token(get_jwt_identity)
+            set_access_cookies(response, access_token)
+        return response
+    except (RuntimeError, KeyError):
+        return response
 
 
 class AuthGroupAPI(MethodView):
@@ -19,17 +35,14 @@ class AuthGroupAPI(MethodView):
         try:
             email = data["email"]
             password = data["password"]
-
             user = AuthUser(email=email, password=password)
             if user.add_user():
                 token = user.create_jwt_token()
                 resp = jsonify({"msg": "registration successful"})
                 set_access_cookies(resp, token)
                 data["token"] = token
-                print("New user created.")
                 return resp, 201
             else:
-                print("hello.......")
                 msg = "Email address already exists."
                 return jsonify({"msg": msg}), 400
         except KeyError:
@@ -48,13 +61,14 @@ class AuthItemAPI(MethodView):
 
     @jwt_required()
     def get(self, item_id):
-        user = self._get_item(item_id)
-        if user:
-            print("FOUND USER:", user)
-            return jsonify({"email": user.email}), 200
-        else:
-            print("USER NOT FOUND")
-            return 400
+        user_authenticated = get_jwt_identity()
+        if user_authenticated:
+            user = self._get_item(item_id)
+            if user:
+                return jsonify({"email": user.email}), 200
+            else:
+                print("USER NOT FOUND")
+                return 400
 
 
 class LoginAPI(MethodView):
@@ -78,6 +92,7 @@ class LoginAPI(MethodView):
             if isinstance(db_result, AuthUser):
                 token = user.create_jwt_token()
                 success_msg = "Login successful."
+
                 user_dict = {"msg": success_msg}
 
                 user_dict["id"] = db_result.id

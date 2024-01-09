@@ -1,9 +1,7 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
-from flask_cors import CORS
-from app.config import DevConfig, TestConfig
+from app.config import TestConfig
 from app.server.auth.views.auth_views import auth_blueprint, AuthGroupAPI, AuthItemAPI, LoginAPI
-from app.server.auth.views.token_views import token_blueprint
 from app.server.auth.models.user.user_model import AuthUser
 from app.database import db
 
@@ -43,12 +41,11 @@ def create_app(default_config=TestConfig):
     app.config["JWT_COOKIE_SECURE"] = False
     app.config["JWT_SECRET_KEY"] = "changeme"
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=45)
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=10)
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
 
-    JWTManager(app)
-    CORS(app)
     db.init_app(app)
+    JWTManager(app)
 
     with app.app_context():
         db.create_all()

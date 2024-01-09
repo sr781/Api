@@ -3,7 +3,6 @@ from app.factory import create_app
 from app.database import db
 from typing import Union, Iterator
 from flask import Flask
-from flask import g
 
 
 class BaseTestCase(AppTestCase):

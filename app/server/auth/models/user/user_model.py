@@ -42,7 +42,7 @@ class AuthUser(db.Model):
 
     @staticmethod
     def refresh_jwt_token(func):
-        return create_access_token(func)
+        return create_access_token(identity=func())
 
     def add_user(self):
         """TODO: TEST OPERATIONAL FAILURE"""
