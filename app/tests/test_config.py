@@ -8,6 +8,9 @@ from app.config import TestConfig, DevConfig
 
 
 class TestDevConfig(AppTestCase):
+    """
+    Test appropriate configuration for Development environment.
+    """
     def create_app(self) -> Union[Flask, Iterator[Flask]]:
         app = create_app(default_config=DevConfig)
         return app
@@ -20,6 +23,9 @@ class TestDevConfig(AppTestCase):
 
 
 class TestTestConfig(AppTestCase):
+    """
+    Test appropriate configuration for Testing environment.
+    """
     def create_app(self) -> Union[Flask, Iterator[Flask]]:
         app = create_app(default_config=TestConfig)
         return app

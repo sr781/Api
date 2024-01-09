@@ -11,7 +11,31 @@ from datetime import timedelta
 
 
 def create_app(default_config=TestConfig):
-    """Define the Flask Application"""
+    """
+    Define the Flask Application
+    :param default_config - Defaults to TestConfig for unit tests.
+    :return Flask app
+
+    Initialize:
+        - Flask app
+        - JWT Manager
+        - CORS
+
+    Register blueprints:
+        - Auth
+        - User
+
+    Register routes:
+        - Auth:
+            - Auth group
+            - Auth item
+        - User:
+            - TODO: User group
+            - TODO: User item
+        - Post:
+            - TODO: Post group
+            - TODO: Post item
+    """
 
     app = Flask(__name__)
 

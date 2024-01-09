@@ -8,6 +8,12 @@ from app.database import db
 class UserModelTests(BaseTestCase):
     """
     Test integration of User model in Database.
+
+    Methods:
+        test_user_created - Test user created successfully.
+        test_update_user - Test user updated successfully.
+        test_delete_user - Test user deleted successfully.
+
     """
 
     def test_user_created(self, app):

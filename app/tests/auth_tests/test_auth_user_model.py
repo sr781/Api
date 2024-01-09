@@ -7,7 +7,17 @@ from unittest.mock import patch
 
 
 class AuthUserModelTests(BaseTestCase):
+    """
+    Test integration of Auth User model in DB.
+
+    Methods:
+        test_user_create_success - Test creating user successful.
+        test_user_delete_success - Test deleting user successful.
+        test_create_jwt_token - Test create_jwt_token() method functions correctly.
+    """
+
     def test_user_create_success(self, app):
+        """Test creating a user is successful."""
 
         with app.app_context():
             user = AuthUser(
@@ -23,6 +33,7 @@ class AuthUserModelTests(BaseTestCase):
             self.assertTrue(check_password_hash(users[0].password, "testpass123"))
 
     def test_user_delete_success(self, app):
+        """Test deleting a user is succesful."""
 
         with app.app_context():
             user = AuthUser(
@@ -43,7 +54,7 @@ class AuthUserModelTests(BaseTestCase):
 
     @patch.object(AuthUser, "create_jwt_token")
     def test_create_jwt_token(self, app, patched_token):
-        """Test creating JWT token for given user successful."""
+        """Test creating JWT token for given user is successful."""
 
         token_dict = {
             "access_token": "test_token"

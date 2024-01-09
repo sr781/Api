@@ -2,13 +2,20 @@ from app.tests.base import BaseTestCase
 from app.tests.api_tests.helpers import create_user, create_address
 from app.server.api.models.address_model import Address
 from app.server.api.models.user_model import User
-from sqlalchemy.orm import Session
 
 from app.database import db
 
 
 class AddressModelTests(BaseTestCase):
-    """Test integration of Address model in Database
+    """
+    Test integration of Address model in Database
+
+    Methods:
+        test_create_address - Test address created successfully.
+        test_update_address - Test address updated successfully.
+        test_delete_address - Test address deleted successfully.
+        TODO: test_address_assigned_to_expected_user - Test address bears relationship with expected user only.
+        TODO: test_address_cascade_on_user_delete - Test address deleted when related user removed from DB.
     """
 
     def test_create_address(self, app):

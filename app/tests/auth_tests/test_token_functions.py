@@ -5,7 +5,12 @@ from flask_jwt_extended import get_jwt_identity
 
 
 class TokenTests(ViewTestCase):
-    """Tests for Flask JWT Extended token API."""
+    """
+    Tests for Flask JWT Extended token API.
+
+    Methods:
+        TODO: test_jwt_token_refreshed - Test JWT refreshes successfully.
+    """
 
     def test_jwt_token_refreshed(self, app, client):
         """Test that token refreshes successfully after given time delta."""

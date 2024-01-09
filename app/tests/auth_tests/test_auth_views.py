@@ -10,6 +10,16 @@ import json
 class AuthViewTests(ViewTestCase):
     """
     Test various auth views.
+
+    Methods:
+        test_register_successful - Test POST request to register user returns 201.
+        test_register_incomplete_data_raises_error - Test POST request to create user with incomplete
+                                                     data (email/password) returns 400.
+        test_register_existing_email_raises_error - Test POST request to create user returns 400 if
+                                                    user with same email already exists in DB.
+        test_login - Test POST request to login returns 200.
+        test_login_with_nonexistent_email_raises_error - Test POST request with nonexistent email raises 400.
+        test_login_with_incorrect_password_raises_error - Test POST request with incorrect password raises 400.
     """
     def test_register_successful(self, app,  client):
         """Test making POST request to register user successful"""
@@ -80,7 +90,7 @@ class AuthViewTests(ViewTestCase):
         self.assertEqual(data["id"], 1)
         self.assertEqual(data["msg"], "Login successful.")
 
-    def test_login_with_email_400_error(self, app, client):
+    def test_login_with_nonexistent_email_400_error(self, app, client):
 
         test_user = {
             "email": "nouser@example.com",
