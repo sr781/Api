@@ -1,4 +1,5 @@
 from app.database import db
+from app.server.api.models.base import DBInterface
 
 
 class Address(db.Model):
@@ -23,4 +24,14 @@ class Address(db.Model):
         self.zipcode = zipcode
         self.lat = lat
         self.long = long
+
+    def add_address(self):
+        interface = DBInterface(self)
+        insertion_attempt = interface.add_to_db()
+        if insertion_attempt:
+            return True
+        else:
+            return False
+
+
 

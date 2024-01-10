@@ -1,7 +1,6 @@
 from app.tests.base import BaseTestCase
 from app.tests.api_tests.helpers import create_user
 from app.server.api.models.user_model import User
-import time
 from app.database import db
 
 
