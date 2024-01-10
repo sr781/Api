@@ -10,7 +10,6 @@ auth_blueprint = Blueprint("auth", __name__)
 
 @auth_blueprint.after_app_request
 def refresh(response):
-    print("HELLO??DS??SF?SDF")
     try:
         exp = get_jwt()["exp"]
         now = datetime.now()

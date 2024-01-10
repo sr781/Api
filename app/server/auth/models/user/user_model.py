@@ -58,6 +58,7 @@ class AuthUser(db.Model):
                 num_retries -= 1
                 time.sleep(1)
             except IntegrityError:
+                db.session.rollback()
                 return False
 
         if not user_registration_success:

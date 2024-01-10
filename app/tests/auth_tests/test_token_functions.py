@@ -47,6 +47,9 @@ class TokenTests(ViewTestCase):
             # The new token cookie should not match the previous.
             self.assertNotEqual(curr_token_cookie, new_token_cookie)
 
+            res = client.get(f"/auth_api/{1}")
+            self.assertEqual(res.status_code, 200)
+
     def test_jwt_token_not_refreshed_if_request_made_within_expiry_delta(self, app, client):
         """
         Test that token isn't refreshed if a request is made within the JWT expiration delta.

@@ -1,7 +1,7 @@
 from app.tests.base import BaseTestCase
 from app.tests.api_tests.helpers import create_user
 from app.server.api.models.user_model import User
-
+import time
 from app.database import db
 
 
@@ -37,6 +37,19 @@ class UserModelTests(BaseTestCase):
             self.assertEqual(users[0].email, "test@example.com")
             self.assertEqual(users[0].phone, "1234567890")
 
+    def test_add_user_existing_username_raises_error(self, app):
+        """Test that an error is raised in insertion attempt when username already exists."""
+
+        with app.app_context():
+            create_user()
+
+            # Create second user with exactly the same details
+            create_user()
+
+            # Database should still only contain one record with username of 'testusername'.
+            users = User.query.filter_by(username="testusername").all()
+            self.assertEqual(len(users), 1)
+
     def test_update_user(self, app):
         """
         Test user updated successfully.
@@ -48,7 +61,6 @@ class UserModelTests(BaseTestCase):
             create_user()
 
             user = User.query.filter_by(name="Test User").first()
-            print(user)
             user.name = "New Name"
             user.email = "newemail@example.com"
             db.session.commit()

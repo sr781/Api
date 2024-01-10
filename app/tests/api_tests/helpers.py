@@ -16,9 +16,7 @@ def create_user():
     phone = "1234567890"
 
     user = User(name=name, username=username, email=email, phone=phone)
-
-    db.session.add(user)
-    db.session.commit()
+    user.add_user()
 
     return user
 
@@ -27,7 +25,7 @@ def create_address(user_id):
     """
     Helper method to create a test address.
 
-    :param userId: ID of a test user to serve as FK.
+    :param user_id: ID of a test user to serve as FK.
     :return: <Address> object
     """
 
@@ -38,7 +36,7 @@ def create_address(user_id):
     lat = "-3.01244"
     long = "24.34234"
 
-    address = Address(user_id=user_id,street=street,
+    address = Address(user_id=user_id, street=street,
                       suite=suite, city=city, zipcode=zipcode,
                       lat=lat, long=long)
 
