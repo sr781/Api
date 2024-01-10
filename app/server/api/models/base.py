@@ -1,5 +1,3 @@
-"""Base superclass"""
-
 from app.database import db
 from sqlalchemy.exc import IntegrityError, OperationalError
 import time
