@@ -25,13 +25,10 @@ class Address(db.Model):
         self.lat = lat
         self.long = long
 
-    def add_address(self):
-        interface = DBInterface(self)
-        insertion_attempt = interface.add_to_db()
+    def insert(self):
+        interface = DBInterface(db.session)
+        insertion_attempt = interface.add_to_db(self)
         if insertion_attempt:
             return True
         else:
             return False
-
-
-

@@ -16,7 +16,6 @@ def create_user():
     phone = "1234567890"
 
     user = User(name=name, username=username, email=email, phone=phone)
-    user.add_user()
 
     return user
 
@@ -39,8 +38,5 @@ def create_address(user_id):
     address = Address(user_id=user_id, street=street,
                       suite=suite, city=city, zipcode=zipcode,
                       lat=lat, long=long)
-
-    db.session.add(address)
-    db.session.commit()
 
     return address

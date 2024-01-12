@@ -22,10 +22,14 @@ class AddressModelTests(BaseTestCase):
         """Test creating an address"""
 
         with app.app_context():
-            create_user()
+            user = create_user()
+            user.insert()
 
             user = User.query.filter_by(id=1).first()
-            create_address(user.id)
+
+            address = create_address(user.id)
+
+            address.insert()
 
             addresses = Address.query.all()
             self.assertEqual(len(addresses), 1)
@@ -40,9 +44,11 @@ class AddressModelTests(BaseTestCase):
         """Test updating an address"""
 
         with app.app_context():
-            create_user()
-            user = User.query.filter_by(id=1).first()
-            create_address(user.id)
+            user = create_user()
+            user.insert()
+            user_with_address = User.query.filter_by(id=1).first()
+            address = create_address(user_with_address.id)
+            address.insert()
 
             address_to_update = Address.query.filter_by(user_id=user.id).first()
 
@@ -67,9 +73,11 @@ class AddressModelTests(BaseTestCase):
         """Test deleting an address."""
 
         with app.app_context():
-            create_user()
-            user = User.query.filter_by(id=1).first()
-            create_address(user.id)
+            user = create_user()
+            user.insert()
+            user_with_address = User.query.filter_by(id=1).first()
+            address = create_address(user_with_address.id)
+            address.insert()
 
             address_to_delete = Address.query.filter_by(user_id=user.id).first()
 
@@ -78,3 +86,36 @@ class AddressModelTests(BaseTestCase):
 
             addresses = Address.query.all()
             self.assertEqual(len(addresses), 0)
+
+    def test_address_assigned_to_user(self, app):
+        """Test that an address is able to be retrieved using the associated user's ID."""
+
+        with app.app_context():
+            user = create_user()
+            user.insert()
+            user_with_address = User.query.filter_by(id=1).first()
+
+            address = create_address(user_with_address.id)
+            address.insert()
+
+            user_address = Address.query.filter_by(user_id=user.id).first()
+            self.assertEqual(user_address.user_id, user.id)
+
+    def test_address_cascade_on_user_delete(self, app):
+        """Test that an address is able to be retrieved using the associated user's ID."""
+
+        with app.app_context():
+            user = create_user()
+            user.insert()
+            user_with_address = User.query.filter_by(id=1).first()
+
+            address = create_address(user_with_address.id)
+            address.insert()
+
+            address_list = Address.query.all()
+            self.assertEqual(len(address_list), 1)
+
+            user_to_remove = User.get_user(user.username)
+            User.remove(user_to_remove)
+            new_address_list = Address.query.all()
+            self.assertEqual(len(new_address_list), 0)

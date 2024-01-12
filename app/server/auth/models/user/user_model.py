@@ -51,7 +51,8 @@ class AuthUser(db.Model):
 
         while num_retries > 0:
             try:
-                self.commit(self)
+                db.session.add(self)
+                db.session.commit()
                 user_registration_success = True
                 break
             except OperationalError:
@@ -64,8 +65,3 @@ class AuthUser(db.Model):
         if not user_registration_success:
             return False
         return True
-
-    @staticmethod
-    def commit(obj):
-        db.session.add(obj)
-        db.session.commit()

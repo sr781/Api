@@ -1,6 +1,7 @@
 from app.tests.base import BaseTestCase
 from app.tests.api_tests.helpers import create_user
 from app.server.api.models.user_model import User
+from sqlalchemy.exc import IntegrityError
 from app.database import db
 
 
@@ -27,7 +28,8 @@ class UserModelTests(BaseTestCase):
         """
 
         with app.app_context():
-            create_user()
+            user = create_user()
+            user.insert()
 
             users = User.query.all()
             self.assertEqual(len(users), 1)
@@ -40,31 +42,50 @@ class UserModelTests(BaseTestCase):
         """Test that an error is raised in insertion attempt when username already exists."""
 
         with app.app_context():
-            create_user()
+            user = create_user()
+            user.insert()
 
             # Create second user with exactly the same details
-            create_user()
+            duplicate_user = create_user()
+            duplicate_user.insert()
 
             # Database should still only contain one record with username of 'testusername'.
             users = User.query.filter_by(username="testusername").all()
             self.assertEqual(len(users), 1)
 
-    def test_update_user(self, app):
-        """
-        Test user updated successfully.
-
-        API should get student by ID, and update details.
-        """
+    def test_update_user_with_invalid_key_raises_error(self, app):
+        """Test that adding a new key on user update is forbidden, and ValueError is thrown."""
 
         with app.app_context():
-            create_user()
+            user = create_user()
+            user.insert()
 
             user = User.query.filter_by(name="Test User").first()
-            user.name = "New Name"
-            user.email = "newemail@example.com"
-            db.session.commit()
+            update_dict = {
+                "wrong_key": 12345,
+                "email": "newemail@example.com",
+            }
 
+            with self.assertRaises(ValueError):
+                User.update(user, update_dict)
+                updated_user = User.query.filter_by(name="Test User").first()
+                self.assertNotIn(updated_user, "wrong_key")
+
+    def test_update_user(self, app):
+        """Test updating user with valid details is successful."""
+        with app.app_context():
+            user = create_user()
+            user.insert()
+
+            retrieved_user = User.get_user(user.username)
+            update_dict = {
+                "name": "New Name",
+                "email": "newemail@example.com",
+            }
+
+            User.update(retrieved_user, update_dict)
             updated_user = User.query.filter_by(name="New Name").first()
+
             self.assertTrue(isinstance(updated_user, User))
             self.assertEqual(updated_user.name, "New Name")
             self.assertEqual(updated_user.email, "newemail@example.com")
@@ -75,14 +96,14 @@ class UserModelTests(BaseTestCase):
         """Test deleting a user"""
 
         with app.app_context():
-            create_user()
+            user = create_user()
+            user.insert()
 
             users = User.query.all()
             self.assertEqual(len(users), 1)
 
-            user = db.session.get(User, ident=1)
-            db.session.delete(user)
-            db.session.commit()
+            user = User.get_user(user.username)
+            User.remove(user)
 
             users = User.query.all()
             self.assertEqual(len(users), 0)
