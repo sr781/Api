@@ -14,8 +14,8 @@ class AddressModelTests(BaseTestCase):
         test_create_address - Test address created successfully.
         test_update_address - Test address updated successfully.
         test_delete_address - Test address deleted successfully.
-        TODO: test_address_assigned_to_expected_user - Test address bears relationship with expected user only.
-        TODO: test_address_cascade_on_user_delete - Test address deleted when related user removed from DB.
+        test_address_assigned_to_expected_user - Test address bears relationship with expected user only.
+        test_address_cascade_on_user_delete - Test address deleted when related user removed from DB.
     """
 
     def test_create_address(self, app):
@@ -52,13 +52,15 @@ class AddressModelTests(BaseTestCase):
 
             address_to_update = Address.query.filter_by(user_id=user.id).first()
 
-            address_to_update.street = "New Street"
-            address_to_update.suite = "New Suite"
-            address_to_update.city = "New City"
-            address_to_update.lat = "-3.1000"
+            update_dict = {
+                "street": "New Street",
+                "city": "New City",
+                "suite": "New Suite",
+                "lat": "-3.1000"
+            }
 
-            db.session.commit()
-
+            address_to_update = Address.get_address(address_to_update.id)
+            Address.update(address_to_update, update_dict)
             updated_address = Address.query.filter_by(user_id=user.id).first()
 
             # Street, Suite, City updated only.
@@ -119,3 +121,24 @@ class AddressModelTests(BaseTestCase):
             User.remove(user_to_remove)
             new_address_list = Address.query.all()
             self.assertEqual(len(new_address_list), 0)
+
+    def test_address_delete(self, app):
+        """Test address is deleted from DB successfully."""
+
+        with app.app_context():
+            user = create_user()
+            user.insert()
+            user_with_address = User.query.filter_by(id=1).first()
+            address = create_address(user_with_address.id)
+            address.insert()
+
+            address_list = Address.query.all()
+            self.assertEqual(len(address_list), 1)
+
+            users_addresses = Address.query.filter_by(user_id=1).all()
+            address_to_delete = Address.get_address(users_addresses[0].id)
+            Address.remove(address_to_delete)
+
+            empty_address_list = Address.query.all()
+            self.assertEqual(len(empty_address_list), 0)
+
