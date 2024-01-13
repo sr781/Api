@@ -1,7 +1,7 @@
 from app.tests.base import BaseTestCase
 from app.tests.api_tests.helpers import create_user
 from app.server.api.models.user_model import User
-from sqlalchemy.exc import IntegrityError
+from app.server.api.models.base import DBInterface
 from app.database import db
 
 
@@ -29,7 +29,8 @@ class UserModelTests(BaseTestCase):
 
         with app.app_context():
             user = create_user()
-            user.insert()
+            interface = DBInterface(db.session, user)
+            interface.add_to_db()
 
             users = User.query.all()
             self.assertEqual(len(users), 1)
@@ -43,11 +44,15 @@ class UserModelTests(BaseTestCase):
 
         with app.app_context():
             user = create_user()
-            user.insert()
+
+            interface = DBInterface(db.session, user)
+            interface.add_to_db()
 
             # Create second user with exactly the same details
             duplicate_user = create_user()
-            duplicate_user.insert()
+
+            interface = DBInterface(db.session, duplicate_user)
+            interface.add_to_db()
 
             # Database should still only contain one record with username of 'testusername'.
             users = User.query.filter_by(username="testusername").all()
@@ -58,7 +63,9 @@ class UserModelTests(BaseTestCase):
 
         with app.app_context():
             user = create_user()
-            user.insert()
+
+            interface = DBInterface(db.session, user)
+            interface.add_to_db()
 
             user = User.query.filter_by(name="Test User").first()
             update_dict = {
@@ -67,7 +74,8 @@ class UserModelTests(BaseTestCase):
             }
 
             with self.assertRaises(ValueError):
-                User.update(user, update_dict)
+                interface = DBInterface(db.session, user)
+                interface.update_object(update_dict)
                 updated_user = User.query.filter_by(name="Test User").first()
                 self.assertNotIn(updated_user, "wrong_key")
 
@@ -75,16 +83,21 @@ class UserModelTests(BaseTestCase):
         """Test updating user with valid details is successful."""
         with app.app_context():
             user = create_user()
-            user.insert()
 
-            retrieved_user = User.get_user(user.username)
+            interface = DBInterface(db.session, user)
+            interface.add_to_db()
+
+            retrieved_user = DBInterface.get_object(User, username=user.username)
+
             update_dict = {
                 "name": "New Name",
                 "email": "newemail@example.com",
             }
 
-            User.update(retrieved_user, update_dict)
-            updated_user = User.query.filter_by(name="New Name").first()
+            interface = DBInterface(db.session, retrieved_user)
+            interface.update_object(update_dict)
+
+            updated_user = DBInterface.get_object(User, username=user.username)
 
             self.assertTrue(isinstance(updated_user, User))
             self.assertEqual(updated_user.name, "New Name")
@@ -97,13 +110,16 @@ class UserModelTests(BaseTestCase):
 
         with app.app_context():
             user = create_user()
-            user.insert()
+
+            interface = DBInterface(db.session, user)
+            interface.add_to_db()
 
             users = User.query.all()
             self.assertEqual(len(users), 1)
 
-            user = User.get_user(user.username)
-            User.remove(user)
+            user = DBInterface.get_object(User, username=user.username)
+            interface = DBInterface(db.session, user)
+            interface.remove_from_db()
 
             users = User.query.all()
             self.assertEqual(len(users), 0)

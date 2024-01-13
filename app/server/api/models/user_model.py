@@ -19,39 +19,3 @@ class User(db.Model):
         self.username = username,
         self.email = email,
         self.phone = phone
-
-    @staticmethod
-    def get_user(username):
-        interface = DBInterface(db.session)
-        user = interface.get_object(User, username=username)
-        if user:
-            return user
-        else:
-            return None
-
-    def insert(self):
-        interface = DBInterface(db.session)
-        insertion_attempt = interface.add_to_db(self)
-        if insertion_attempt:
-            return True
-        else:
-            return None
-
-    @staticmethod
-    def remove(user_model):
-        interface = DBInterface(db.session)
-        delete_attempt = interface.remove_from_db(user_model)
-        if delete_attempt:
-            return True
-        else:
-            return None
-
-    @staticmethod
-    def update(user_model, attrs):
-        interface = DBInterface(db.session)
-        update_attempt = interface.update_object(user_model, attrs)
-        print(update_attempt)
-        if update_attempt:
-            return True
-        else:
-            return None

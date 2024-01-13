@@ -24,38 +24,3 @@ class Address(db.Model):
         self.zipcode = zipcode
         self.lat = lat
         self.long = long
-
-    def insert(self):
-        interface = DBInterface(db.session)
-        insertion_attempt = interface.add_to_db(self)
-        if insertion_attempt:
-            return True
-        else:
-            return None
-
-    @staticmethod
-    def get_address(address_id):
-        interface = DBInterface(db.session)
-        address = interface.get_object(Address, id=address_id)
-        if address:
-            return address
-        else:
-            return None
-
-    @staticmethod
-    def remove(address_model):
-        interface = DBInterface(db.session)
-        delete_attempt = interface.remove_from_db(address_model)
-        if delete_attempt:
-            return True
-        else:
-            return None
-
-    @staticmethod
-    def update(address_model, attrs):
-        interface = DBInterface(db.session)
-        update_attempt = interface.update_object(address_model, attrs)
-        if update_attempt:
-            return True
-        else:
-            return None

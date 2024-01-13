@@ -2,6 +2,7 @@ from app.tests.base import BaseTestCase
 from app.tests.api_tests.helpers import create_user, create_address
 from app.server.api.models.address_model import Address
 from app.server.api.models.user_model import User
+from app.server.api.models.base import DBInterface
 
 from app.database import db
 
@@ -23,13 +24,15 @@ class AddressModelTests(BaseTestCase):
 
         with app.app_context():
             user = create_user()
-            user.insert()
+
+            interface = DBInterface(db.session, user)
+            interface.add_to_db()
 
             user = User.query.filter_by(id=1).first()
 
             address = create_address(user.id)
-
-            address.insert()
+            interface = DBInterface(db.session, address)
+            interface.add_to_db()
 
             addresses = Address.query.all()
             self.assertEqual(len(addresses), 1)
@@ -45,10 +48,13 @@ class AddressModelTests(BaseTestCase):
 
         with app.app_context():
             user = create_user()
-            user.insert()
+            interface = DBInterface(db.session, user)
+            interface.add_to_db()
+
             user_with_address = User.query.filter_by(id=1).first()
             address = create_address(user_with_address.id)
-            address.insert()
+            interface = DBInterface(db.session, address)
+            interface.add_to_db()
 
             address_to_update = Address.query.filter_by(user_id=user.id).first()
 
@@ -59,8 +65,10 @@ class AddressModelTests(BaseTestCase):
                 "lat": "-3.1000"
             }
 
-            address_to_update = Address.get_address(address_to_update.id)
-            Address.update(address_to_update, update_dict)
+            address_to_update = DBInterface.get_object(Address, id=address_to_update.id)
+            interface = DBInterface(db.session, address_to_update)
+            interface.update_object(update_dict)
+
             updated_address = Address.query.filter_by(user_id=user.id).first()
 
             # Street, Suite, City updated only.
@@ -76,15 +84,17 @@ class AddressModelTests(BaseTestCase):
 
         with app.app_context():
             user = create_user()
-            user.insert()
+            interface = DBInterface(db.session, user)
+            interface.add_to_db()
+
             user_with_address = User.query.filter_by(id=1).first()
             address = create_address(user_with_address.id)
-            address.insert()
+            interface = DBInterface(db.session, address)
+            interface.add_to_db()
 
-            address_to_delete = Address.query.filter_by(user_id=user.id).first()
-
-            db.session.delete(address_to_delete)
-            db.session.commit()
+            address_to_delete = DBInterface.get_object(Address, id=address.id)
+            interface = DBInterface(db.session, address_to_delete)
+            interface.remove_from_db()
 
             addresses = Address.query.all()
             self.assertEqual(len(addresses), 0)
@@ -94,11 +104,13 @@ class AddressModelTests(BaseTestCase):
 
         with app.app_context():
             user = create_user()
-            user.insert()
+            interface = DBInterface(db.session, user)
+            interface.add_to_db()
             user_with_address = User.query.filter_by(id=1).first()
 
             address = create_address(user_with_address.id)
-            address.insert()
+            interface = DBInterface(db.session, address)
+            interface.add_to_db()
 
             user_address = Address.query.filter_by(user_id=user.id).first()
             self.assertEqual(user_address.user_id, user.id)
@@ -108,17 +120,22 @@ class AddressModelTests(BaseTestCase):
 
         with app.app_context():
             user = create_user()
-            user.insert()
+            interface = DBInterface(db.session, user)
+            interface.add_to_db()
+
             user_with_address = User.query.filter_by(id=1).first()
 
             address = create_address(user_with_address.id)
-            address.insert()
+            interface = DBInterface(db.session, address)
+            interface.add_to_db()
 
             address_list = Address.query.all()
             self.assertEqual(len(address_list), 1)
 
-            user_to_remove = User.get_user(user.username)
-            User.remove(user_to_remove)
+            user_to_remove = DBInterface.get_object(User, id=user.id)
+            interface = DBInterface(db.session, user_to_remove)
+            interface.remove_from_db()
+
             new_address_list = Address.query.all()
             self.assertEqual(len(new_address_list), 0)
 
@@ -127,18 +144,20 @@ class AddressModelTests(BaseTestCase):
 
         with app.app_context():
             user = create_user()
-            user.insert()
+            interface = DBInterface(db.session, user)
+            interface.add_to_db()
             user_with_address = User.query.filter_by(id=1).first()
+
             address = create_address(user_with_address.id)
-            address.insert()
+            interface = DBInterface(db.session, address)
+            interface.add_to_db()
 
             address_list = Address.query.all()
             self.assertEqual(len(address_list), 1)
 
-            users_addresses = Address.query.filter_by(user_id=1).all()
-            address_to_delete = Address.get_address(users_addresses[0].id)
-            Address.remove(address_to_delete)
+            address_to_delete = DBInterface.get_object(Address, id=address.id)
+            interface = DBInterface(db.session, address_to_delete)
+            interface.remove_from_db()
 
             empty_address_list = Address.query.all()
             self.assertEqual(len(empty_address_list), 0)
-
