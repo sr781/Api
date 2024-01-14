@@ -1,5 +1,4 @@
 from app.database import db
-from app.server.api.models.base import DBInterface
 from sqlalchemy.orm import Mapped
 
 
@@ -9,7 +8,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = db.Column(db.String(200), nullable=False)
-    username = db.Column(db.String(100), nullable=False, unique=True)
+    username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
     phone = db.Column(db.String(50), nullable=True)
     addresses = db.relationship("Address", backref="user", cascade="delete, all", lazy=True)

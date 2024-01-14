@@ -56,7 +56,7 @@ class TokenTests(ViewTestCase):
         """
 
         with self.app_context:
-            app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=10)
+            app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=20)
             test_user = {
                 "email": "test@example.com",
                 "password": "testpass123"

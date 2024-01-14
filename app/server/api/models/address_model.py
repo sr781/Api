@@ -1,5 +1,4 @@
 from app.database import db
-from app.server.api.models.base import DBInterface
 
 
 class Address(db.Model):

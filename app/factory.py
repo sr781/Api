@@ -2,7 +2,9 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from app.config import TestConfig
 from app.server.auth.views.auth_views import auth_blueprint, AuthGroupAPI, AuthItemAPI, LoginAPI
+from app.server.api.views.user_views import UserItemView, UserListView, user_blueprint
 from app.server.auth.models.user.user_model import AuthUser
+from app.hooks.custom_responses import custom_unauthorized_response
 from app.database import db
 
 from datetime import timedelta
@@ -45,13 +47,13 @@ def create_app(default_config=TestConfig):
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
 
     db.init_app(app)
-    JWTManager(app)
+    jwt = JWTManager(app)
 
     with app.app_context():
         db.create_all()
 
     app.register_blueprint(auth_blueprint)
-    # app.register_blueprint(token_blueprint)
+    app.register_blueprint(user_blueprint)
 
     app.add_url_rule(
         "/auth_api/", endpoint="auth-group", view_func=AuthGroupAPI.as_view("auth_api_group", AuthUser)
@@ -63,5 +65,21 @@ def create_app(default_config=TestConfig):
     app.add_url_rule(
         "/auth_api/login", endpoint="auth-login", view_func=LoginAPI.as_view("auth_api_login", AuthUser)
     )
+
+    app.add_url_rule(
+        "/api/user-item/", endpoint="user-item", view_func=UserItemView.as_view("user-item")
+    )
+
+    app.add_url_rule(
+        "/api/user-list/", endpoint="user-list", view_func=UserListView.as_view("user-list")
+    )
+
+    @jwt.unauthorized_loader
+    def unauthorized_callback(callback):
+        return custom_unauthorized_response()
+
+    @app.errorhandler(401)
+    def unauthorized(e):
+        return custom_unauthorized_response()
 
     return app
