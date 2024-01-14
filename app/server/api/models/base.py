@@ -1,6 +1,6 @@
 from app.database import db
-from sqlalchemy.exc import IntegrityError, OperationalError, DisconnectionError
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import IntegrityError, OperationalError
+
 import time
 
 
@@ -36,16 +36,19 @@ class DBInterface:
             return False
         return True
 
-    @staticmethod
-    def get_object(model, **kwargs):
+    def get_object(self, model, **kwargs):
         try:
-            obj = model.query.filter_by(**kwargs).first()
+            obj = self.cursor.query(model).filter_by(**kwargs).first()
             if obj:
                 return obj
             else:
                 return None
         except (IntegrityError, OperationalError):
             return None
+
+    def get_all_objects(self, model):
+        """Return all objects for a given model."""
+        return self.cursor.query(model).all()
 
     def update_object(self, model, attrs):
         """Update object details"""
@@ -74,16 +77,3 @@ class DBInterface:
     def _commit(self):
         """Commit transaction."""
         self.cursor.commit()
-
-    def join_tables_and_return_result(self, table1, table2, join_condition, *args):
-        """Join any users with their associated addresses."""
-        # TODO: Handle exceptions.
-        try:
-            res = table1.query.join(table2, join_condition, isouter=True).add_columns(*args).all()
-
-            return res
-        except NoResultFound:
-            return None
-        except DisconnectionError:
-            return None
-

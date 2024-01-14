@@ -109,7 +109,7 @@ class UserModelTests(BaseTestCase):
             users = User.query.all()
             self.assertEqual(len(users), 1)
 
-            user = DBInterface.get_object(User, username=user.username)
+            user = self.interface.get_object(User, username=user.username)
             self.interface.remove_from_db(user)
 
             users = User.query.all()

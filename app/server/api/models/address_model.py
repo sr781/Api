@@ -1,9 +1,10 @@
 from app.database import db
+from sqlalchemy.orm import backref
 
 
 class Address(db.Model):
     """Model to represent an Address record in DB."""
-    __tablename__= "addresses"
+    __tablename__= "address"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -13,6 +14,7 @@ class Address(db.Model):
     zipcode = db.Column(db.String(20), nullable=True)
     lat = db.Column(db.String(20), nullable=True)
     long = db.Column(db.String(20), nullable=True)
+    user = db.relationship("User", back_populates="addresses")
 
     def __init__(self, user_id, street, suite, city,
                  zipcode, lat, long):

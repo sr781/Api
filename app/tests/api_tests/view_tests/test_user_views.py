@@ -57,7 +57,7 @@ class UserViewTests(ViewTestCase):
 
             create_auth_user(client.post)
 
-            res = client.post("/api/user-item/", data=json.dumps(user_details), content_type="application/json")
+            res = client.post("/api/user-list/", data=json.dumps(user_details), content_type="application/json")
             self.assertEqual(res.status_code, 201)
 
             user = self.interface.get_object(User, id=1)
@@ -94,7 +94,7 @@ class UserViewTests(ViewTestCase):
                 }
             }
 
-            res = client.post("/api/user-item/", data=json.dumps(user_details), content_type="application/json")
+            res = client.post("/api/user-list/", data=json.dumps(user_details), content_type="application/json")
             data = json.loads(res.data)
 
             self.assertEqual(res.status_code, 401)
@@ -127,7 +127,7 @@ class UserViewTests(ViewTestCase):
         self.assertEqual(res.status_code, 200)
 
         data = json.loads(res.data)
-        self.assertEqual(len(data["data"]), 4)
+        self.assertEqual(len(data["data"]), 3)
 
     def test_get_users_unauthorized(self, app, client):
         """Test unauthorized GET request to User List API returns 401."""
@@ -135,12 +135,44 @@ class UserViewTests(ViewTestCase):
         res = client.get("/api/user-list/")
         self.assertEqual(res.status_code, 401)
 
-    #
-    # def test_get_user_by_id(self):
-    #     pass
-    #
-    # def test_get_user_by_id_unauthorized(self):
-    #     pass
+    def test_get_user_by_id(self, app, client):
+        """Test GET request to return single user returns 200."""
+        test_user_1 = create_user()
+        self.interface.add_to_db(test_user_1)
+
+        test_address_1 = create_address(test_user_1.id)
+        self.interface.add_to_db(test_address_1)
+
+        create_auth_user(client.post)
+
+        res = client.get(f"/api/user-item/{test_user_1.id}")
+
+        self.assertEqual(res.status_code, 200)
+
+        data = json.loads(res.data)
+
+        self.assertEqual(data["data"]["id"], 1)
+        self.assertEqual(data["data"]["name"], "Test User")
+        self.assertEqual(data["data"]["username"], "testusername")
+        self.assertEqual(data["data"]["email"], "test@example.com")
+        self.assertEqual(data["data"]["phone"], "1234567890")
+        self.assertEqual(data["data"]["addresses"][0]["street"], "Test Street")
+        self.assertEqual(data["data"]["addresses"][0]["suite"], "Test Suite")
+        self.assertEqual(data["data"]["addresses"][0]["zipcode"], "T35TZP")
+        self.assertEqual(data["data"]["addresses"][0]["lat"], "-3.01244")
+        self.assertEqual(data["data"]["addresses"][0]["long"], "24.34234")
+
+    def test_get_user_by_id_unauthorized(self, app, client):
+        """Test 401 error returned when unauthorized GET request made for single user."""
+
+        test_user_1 = create_user()
+        self.interface.add_to_db(test_user_1)
+
+        res = client.get(f"/api/user-item/{test_user_1.id}")
+        self.assertEqual(res.status_code, 401)
+
+        data = json.loads(res.data)
+        self.assertEqual(data["msg"], "Please login.")
     #
     # def test_patch_user(self):
     #     pass

@@ -6,6 +6,7 @@ from app.server.api.views.user_views import UserItemView, UserListView, user_blu
 from app.server.auth.models.user.user_model import AuthUser
 from app.hooks.custom_responses import custom_unauthorized_response
 from app.database import db
+from app.serializer import ma
 
 from datetime import timedelta
 
@@ -47,6 +48,7 @@ def create_app(default_config=TestConfig):
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
 
     db.init_app(app)
+    ma.init_app(app)
     jwt = JWTManager(app)
 
     with app.app_context():
@@ -67,7 +69,7 @@ def create_app(default_config=TestConfig):
     )
 
     app.add_url_rule(
-        "/api/user-item/", endpoint="user-item", view_func=UserItemView.as_view("user-item")
+        "/api/user-item/<int:user_id>", endpoint="user-item", view_func=UserItemView.as_view("user-item")
     )
 
     app.add_url_rule(
