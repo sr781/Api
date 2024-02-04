@@ -1,0 +1,27 @@
+{
+  "data": {
+   "users": [
+     {
+       "id": 1,
+       "name": "John Doe",
+       "username": "john_doe",
+       "email": "john.doe@example.com",
+       "addresses": [
+         {
+           "id": 1,
+           "user_id": 1,
+           "street": "Byron Walk",
+           "suite": 402,
+           "city": "London",
+           "state": "London",
+           "zipcode": "WC1 4RS",
+           "lat": 18.142,
+           "long": 87.333
+         }
+       ]
+     }
+   ]
+  }
+}
+
+
