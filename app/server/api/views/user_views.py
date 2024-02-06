@@ -106,8 +106,12 @@ class UserListView(MethodView):
                 address = Address(user.id, street, suite, city, zipcode, lat, long)
                 interface.add_to_db(address)
 
+            user = interface.get_object(User, id=new_user.id)
+            user_schema = UserSchema(many=False)
+            user_data = user_schema.dump(user)
+
             success_msg = "New user created."
-            return jsonify({"msg": success_msg}), 201
+            return jsonify({"data": user_data, "status": 201, "msg": success_msg}), 201
         except KeyError:
             error_msg = "Some details are missing. Please try again"
             return jsonify({"msg": error_msg})

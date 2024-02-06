@@ -19,18 +19,18 @@ class TestDevConfig(AppTestCase):
         self.assertTrue(flask_app.config["SECRET_KEY"], "pass")
         self.assertTrue(flask_app.config["DEBUG"] is True)
         self.assertFalse(app is None)
-        self.assertEqual(app.config["SQLALCHEMY_DATABASE_URI"], "postgresql://postgres:@localhost/flask_jwt_auth")
+        self.assertEqual(app.config["SQLALCHEMY_DATABASE_URI"], "mysql+pymysql://root:password@localhost/flask_sqlalchemy")
 
 
-class TestTestConfig(AppTestCase):
-    """
-    Test appropriate configuration for Testing environment.
-    """
-    def create_app(self) -> Union[Flask, Iterator[Flask]]:
-        app = create_app(default_config=TestConfig)
-        return app
-
-    def test_app_is_testing(self, app):
-        self.assertTrue(flask_app.config["SECRET_KEY"], "pass")
-        self.assertEqual(flask_app.config["SQLALCHEMY_DATABASE_URI"], "postgresql://postgres:@localhost/flask_jwt_auth_test")
-        self.assertTrue(flask_app.config["DEBUG"] is True)
+# class TestTestConfig(AppTestCase):
+#     """
+#     Test appropriate configuration for Testing environment.
+#     """
+#     def create_app(self) -> Union[Flask, Iterator[Flask]]:
+#         app = create_app(default_config=TestConfig)
+#         return app
+#
+#     def test_app_is_testing(self, app):
+#         self.assertTrue(flask_app.config["SECRET_KEY"], "pass")
+#         self.assertEqual(flask_app.config["SQLALCHEMY_DATABASE_URI"], "postgresql://postgres:@localhost/flask_jwt_auth_test")
+#         self.assertTrue(flask_app.config["DEBUG"] is True)

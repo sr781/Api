@@ -1,8 +1,8 @@
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-postgres_local_base = "postgresql://postgres:@localhost/"
-database_name = "flask_jwt_auth"
+postgres_local_base = "mysql+pymysql://root:password@localhost/"
+database_name = "flask_sqlalchemy"
 
 from datetime import timedelta
 
@@ -27,6 +27,6 @@ class DevConfig(BaseConfig):
 class TestConfig(BaseConfig):
     """Testing Configuration"""
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = postgres_local_base + database_name + "_test"
+    SQLALCHEMY_DATABASE_URI = postgres_local_base + database_name
     PRESERVE_CONTEXT_ON_EXCEPTION = False
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=10)
