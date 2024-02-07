@@ -24,7 +24,7 @@ def student_data_list():
 
         return jsonify(data=data, status=200), 200 #request was sucessful
     else:
-        data = request.json #getting the data from request in json format
+        data = request.json #Data sent from postman assigned to the variable 'data'
         try:
             #Key value pairs
             name = data["name"]
@@ -75,6 +75,24 @@ def get_single_user(student_id):
 
     return jsonify(data=data, status=200), 200 #Indicates success (not 201 because nothing is changed)
 
+@student_data_blueprint.route("/api/students/<int: student_id>", methods=["PATCH"]) #To partially or fully update
+# a record based on the id of the student
+def patch_single_user(student_id):
+    data = request.json #Data sent from postman assigned to the variable 'data'
+
+    student = db.session.query(StudentDataModel).filter_by(id=student_id).first() #As explained in the "GET" method
+    if not student_id: #if the table does not find the record with the corresponding id, this will run
+        error_message= f"Student with the id {student_id} was not found "
+        return jsonify(msg=error_message, status=200), 200
+
+    try:
+        for key, value in data.items():
+            if not hasattr(StudentDataModel, key): #checks if the key value pairs in "data" has the attributes from the
+                #StudentDataModel object
+                raise ValueError
+            else:
+                setattr(student, key, value)
+                db.session.commit() #The commit function will update the table in sql
 
 
 
