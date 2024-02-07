@@ -23,9 +23,8 @@ class StudentDataModel(db.Model):
     # The child object which in this case is the "student_address_data" table will be deleted if the parent
     # "student_data" table which corresponds to the primary and foreign key is deleted
 
-    def __init__(self, id, name, nationality, city, lat, long, gender, age, english_grade, maths_grade, sciences_grade,
+    def __init__(self, name, nationality, city, lat, long, gender, age, english_grade, maths_grade, sciences_grade,
                  languages_grade):
-        self.id = id
         self.name = name
         self.nationality = nationality
         self.city = city

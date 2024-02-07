@@ -35,9 +35,9 @@ def student_data_list():
                                            gender=gender, age=age, english_grade=english_grade, maths_grade=maths_grade,
                                            sciences_grade=sciences_grade, languages_grade=languages_grade )
 
-            #db.session.add(new_student)
+            db.session.add(new_student)
 
-            #db.session.commit()
+            db.session.commit()
 
             success_message = "New student has been created"
 
