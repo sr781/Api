@@ -1,6 +1,6 @@
 """Create the structure for the student table"""
 from app.database import db #importing the db instance from the database file to be able to work with SQLAlchemy
-
+from app.models.address_data_model import AddressDataModel #Needed to make 'relationship' work?
 class StudentDataModel(db.Model):
 
     """The code below is the data structure for one student """
@@ -18,8 +18,13 @@ class StudentDataModel(db.Model):
     maths_grade = db.Column(db.Integer, nullable=False)
     sciences_grade = db.Column(db.Integer, nullable=False)
     languages_grade = db.Column(db.Integer, nullable=False)
+    address_data_model = db.relationship("AddressDataModel", cascade="all, delete-orphan") #Relationship between
+    # address_data_model by class
+    # The child object which in this case is the "student_address_data" table will be deleted if the parent
+    # "student_data" table which corresponds to the primary and foreign key is deleted
 
-    def __init__(self, id, name, nationality, city, lat, long, gender, age, english_grade, maths_grade, sciences_grade, languages_grade):
+    def __init__(self, id, name, nationality, city, lat, long, gender, age, english_grade, maths_grade, sciences_grade,
+                 languages_grade):
         self.id = id
         self.name = name
         self.nationality = nationality
@@ -34,4 +39,5 @@ class StudentDataModel(db.Model):
         self.languages_grade = languages_grade
 
     def __str__(self):
-        return f"Student ID: {self.id} Name: {self.name} Age: {self.age}" #Returns this when called to make the output more readble
+        return f"Student ID: {self.id} Name: {self.name} Age: {self.age}" #Returns this when called to make the output
+        # more readble

@@ -6,7 +6,8 @@ class AddressDataModel(db.Model): #The class inherits from db.Model where db is 
     __tablename__ = "student_address_data" #Name of the table which will appear on MySQL
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True) #Not the same as id for the student_data table
-    student_id = db.Column(db.Integer, db.ForeignKey("student_data.id"), nullable=False) #This links the two tables together
+    student_id = db.Column(db.Integer, db.ForeignKey("student_data.id"), nullable=False) #This links the two tables
+    # together. The 'id' column from the "student_data" table to the "student_id" column of this table
     number = db.Column(db.Integer, nullable=False)
     house_name = db.Column(db.String(50), nullable=False)
     road = db.Column(db.String(50), nullable=False)
@@ -14,6 +15,7 @@ class AddressDataModel(db.Model): #The class inherits from db.Model where db is 
     state = db.Column(db.String(50), nullable=False)
     country = db.Column(db.String(50), nullable=False)
     zipcode = db.Column(db.String(50), nullable=False)
+    student_data_model = db.relationship("StudentDataModel", back_populates="student_data")
 
     def __init__(self, id, student_id, number, house_name, road, city, state, country, zipcode):
         self.id = id
