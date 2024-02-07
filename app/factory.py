@@ -20,5 +20,6 @@ def create_app():
     app.register_blueprint(index_test_blueprint) #For the index
     app.register_blueprint(student_data_blueprint)
 
+
     return app
 
