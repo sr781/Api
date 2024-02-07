@@ -6,8 +6,9 @@ class StudentSchema(SQLAlchemyAutoSchema):
 
     class Meta:
 
-        model = StudentDataModel
+        model = StudentDataModel #The StudentDataModel will be serialised
 
+        #Fields generated with the student data model is serialised
         fields = ("id", "name", "nationality", "city", "lat", "long", "gender", "age", "english_grade", "maths_grade",
                   "sciences_grade", "languages_grade") #, "student_address_data")
 
