@@ -95,6 +95,15 @@ def patch_single_user(student_id):
                 db.session.commit() #The commit function will update the table in sql
 
 
+        student = db.session.query(StudentDataModel).filter_by(id=student_id).first()
+        student_schema = StudentSchema(many=False)
+        data = student_schema.dump(student)
 
+        success_message = f"Student with ID {student.id} updated"
+        return jsonify(msg=success_message, data=data, status=200), 200 #Sucess message, no data was created
+
+    except ValueError:
+        error_message = "Error referencing columns with provided keys"
+        return jsonify(msg=error_message, status=400), 400 #Bad request
 
 
