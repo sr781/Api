@@ -12,4 +12,4 @@ class StudentSchema(SQLAlchemyAutoSchema):
                   "sciences_grade", "languages_grade", )
 
 
-    student_data_sc = ma.Nested()
+    #student_data_sc = ma.Nested()
