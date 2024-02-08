@@ -3,7 +3,7 @@ from app.controllers.interface import ClientInterface
 from app.database import db
 from app.models.student_data_model import StudentDataModel #Used to find the data for the Address
 from app.models.address_data_model import AddressDataModel
-
+from app.schemas.address_data_schema import AddressSchema
 address_data_blueprint = Blueprint("address_data", __name__)
 
 @address_data_blueprint.route("/api/addresses", methods=["GET", "POST"])
@@ -11,7 +11,16 @@ def address_data_list():
     client_interface = ClientInterface("/addresses")
 
     if request.method == "GET":
-        return jsonify(client_interface.get_list()) #Add len checker
+        address = db.session.query(AddressDataModel).all()
+        if len(address) <= 0:
+            error_message = "No results in Addresses"
+            return jsonify(msg=error_message, status=200), 200
+
+        address_schema = AddressSchema(many=True) #Schema copied
+        data = address_schema.dump(address) #Stores the data obtained into the schema
+        return jsonify(data=data, status=200), 200
+
+        #return jsonify(client_interface.get_list()) #Add len checker
     else:
         data = request.json #In the variable data, the request method is used to obtain data (in json format)
         try:
