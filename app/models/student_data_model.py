@@ -18,7 +18,7 @@ class StudentDataModel(db.Model):
     maths_grade = db.Column(db.Integer, nullable=False)
     sciences_grade = db.Column(db.Integer, nullable=False)
     languages_grade = db.Column(db.Integer, nullable=False)
-    address_data_model = db.relationship("AddressDataModel", cascade="all, delete-orphan") #Relationship between
+    address_data = db.relationship("AddressDataModel", cascade="all, delete-orphan") #Relationship between
     # address_data_model by class
     # The child object which in this case is the "student_address_data" table will be deleted if the parent
     # "student_data" table which corresponds to the primary and foreign key is deleted

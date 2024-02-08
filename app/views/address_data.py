@@ -53,3 +53,5 @@ def address_data_list():
             error_message = ("Please specify the fields, <student_id>, <number>, <house_name>, <road>, <city>, <state>"
                              "<country>, <zipcode> for address")
             return jsonify(msg=error_message, status=400), 400 #Error on clients side
+
+

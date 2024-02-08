@@ -1,5 +1,5 @@
 """Use it to create the flask app iteself"""
-##ADD BLUEPRINT FOR THE ADDRESS AFTER MAKING STUDENT DATA WORK
+
 
 from flask import Flask
 from .views.index import index_test_blueprint #imports the class "index_test_blueprint" to be created

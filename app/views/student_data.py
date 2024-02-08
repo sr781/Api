@@ -68,7 +68,7 @@ def get_single_user(student_id):
             #the data in the row
 
     if not student_id: #if the table does not find the record with the corresponding id, this will run
-        error_message= f"Student with the id {student_id} was not found "
+        error_message = f"Student with the id {student_id} was not found "
         return jsonify(msg=error_message, status=200), 200 #Indicates request was successful (works fine, data was just
         # not found)
 
@@ -84,7 +84,7 @@ def patch_single_user(student_id):
 
     student = db.session.query(StudentDataModel).filter_by(id=student_id).first() #As explained in the "GET" method
     if not student_id: #if the table does not find the record with the corresponding id, this will run
-        error_message= f"Student with the id {student_id} was not found "
+        error_message = f"Student with the id {student_id} was not found "
         return jsonify(msg=error_message, status=200), 200
 
     try:
@@ -130,3 +130,4 @@ def patch_single_user(student_id):
 #
 #     db.session.commit() #This will save the data for the new student
 #     data = student_schema.dump(student)
+

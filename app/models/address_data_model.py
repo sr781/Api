@@ -15,7 +15,7 @@ class AddressDataModel(db.Model): #The class inherits from db.Model where db is 
     state = db.Column(db.String(50), nullable=False)
     country = db.Column(db.String(50), nullable=False)
     zipcode = db.Column(db.String(50), nullable=False)
-    student_data_model = db.relationship("StudentDataModel", back_populates="address_data_model")
+    student_data_model = db.relationship("StudentDataModel", backref="address_data_model")
 
     def __init__(self, student_id, number, house_name, road, city, state, country, zipcode):
         self.student_id = student_id
