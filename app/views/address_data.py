@@ -28,7 +28,7 @@ def address_data_list():
                 error_message = "Student not found"
                 return jsonify(msg=error_message, status=400), 400 #Bad request from client side
 
-            student_id = data["student_id"]
+            #student_id = data["student_id"]
             number = data["number"]
             house_name = data["house_name"]
             road = data["road"]
@@ -55,3 +55,18 @@ def address_data_list():
             return jsonify(msg=error_message, status=400), 400 #Error on clients side
 
 
+@address_data_blueprint.route("/api/addresses/<int:address_id>", methods=["GET"])
+def get_single_address(address_id):
+    address = db.session.query(AddressDataModel).filter_by(id=address_id).first() #Looks in the column 'id' for the given
+    # student_id number and selects the first result which is assigned to the variable, "student". Obtains
+    #the data in the row
+
+    if not address_id: #if the table does not find the record with the corresponding id, this will run
+        error_message = f"Address with the id {address_id} was not found "
+        return jsonify(msg=error_message, status=200), 200 #Indicates request was successful (works fine, data was just
+        # not found)
+
+    address_data_schema = AddressSchema(many=False)
+    data = address_data_schema.dump(address) #Result from the first row is taken and added to the schema (does not update)
+
+    return jsonify(data=data, status=200), 200 #Indicates success (not 201 because nothing is changed)
