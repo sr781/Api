@@ -4,8 +4,6 @@ from app.database import db
 from app.models.student_data_model import StudentDataModel #Used to find the data for the Address
 from app.models.address_data_model import AddressDataModel
 
-
-
 address_data_blueprint = Blueprint("address_data", __name__)
 
 @address_data_blueprint.route("/api/addresses", methods=["GET", "POST"])
@@ -32,5 +30,18 @@ def address_data_list():
             country = data["country"]
             zipcode = data["zipcode"]
 
-            new_address_input = AddressDataModel
 
+
+            new_address_input = AddressDataModel(student_id=student.id, number=number, house_name=house_name, road=road,
+                                              city=city, state=state, country=country, zipcode=zipcode)
+
+            db.session.add(new_address_input) #Stages the code
+
+            db.session.commit() #Commit will update the tables in mysql
+
+            success_message = "New address data created for a student"
+            return jsonify(data=data, msg=success_message, status=201), 201 #Sucess, with 201 indicating that a new
+            #resource has been created
+        except KeyError:
+            error_message = "Please specify the fields for address"
+            return jsonify(msg=error_message, status=400), 400 #Error on clients side
