@@ -1,9 +1,12 @@
 """Use it to create the flask app iteself"""
+##ADD BLUEPRINT FOR THE ADDRESS AFTER MAKING STUDENT DATA WORK
+
 from flask import Flask
 from .views.index import index_test_blueprint #imports the class "index_test_blueprint" to be created
-from serializer import ma
-from database import db
-from views.student_data import student_data_blueprint
+from .serializer import ma
+from .database import db
+from .views.student_data import student_data_blueprint
+
 def create_app():
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:admin@localhost/student_and_address_api" #Finds the

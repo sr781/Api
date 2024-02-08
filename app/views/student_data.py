@@ -58,7 +58,7 @@ def student_data_list():
             error_message = "Please check to make sure all the data has been added and POST again"
             return jsonify(msg=error_message, status_code=400) #A 400 Error is due to something on the client side
 
-@student_data_blueprint.route("/api/students/<int: student_id>", methods=["GET"]) #To get one row based on the
+@student_data_blueprint.route("/api/students/<int:student_id>", methods=["GET"]) #To get one row based on the
 #student id
 def get_single_user(student_id):
     student = db.session.query(StudentDataModel).filter_by(id=student_id).first() #Looks in the column 'id' for the given
@@ -75,7 +75,7 @@ def get_single_user(student_id):
 
     return jsonify(data=data, status=200), 200 #Indicates success (not 201 because nothing is changed)
 
-@student_data_blueprint.route("/api/students/<int: student_id>", methods=["PATCH"]) #To partially or fully update
+@student_data_blueprint.route("/api/students/<int:student_id>", methods=["PATCH"]) #To partially or fully update
 # a record based on the id of the student
 def patch_single_user(student_id):
     data = request.json #Data sent from postman assigned to the variable 'data'
@@ -107,3 +107,24 @@ def patch_single_user(student_id):
         return jsonify(msg=error_message, status=400), 400 #Bad request
 
 
+# @student_data_blueprint.route("/api/students/<int: student_id>", methods=["DELETE"]) #To delete a user
+# def delete_single_user(student_id):
+#     student = db.session.query(StudentDataModel).filter_by(id=student_id).first() #Looks in the column 'id' for the given
+#     # student_id number and selects the first result which is assigned to the variable, "student". Obtains
+#     #the data in the row
+#
+#     if not student_id: #if the table does not find the record with the corresponding id, this will run
+#         error_message= f"Student with the id {student_id} was not found "
+#         return jsonify(msg=error_message, status=200), 200 #Indicates request was successful (works fine, data was just
+#         # not found)
+#
+#
+#
+#
+#
+#
+#
+#     db.session.delete(new_student) #updates the database with the new student
+#
+#     db.session.commit() #This will save the data for the new student
+#     data = student_schema.dump(student)
