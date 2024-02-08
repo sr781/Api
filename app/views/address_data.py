@@ -58,7 +58,7 @@ def address_data_list():
 @address_data_blueprint.route("/api/addresses/<int:address_id>", methods=["GET"])
 def get_single_address(address_id):
     address = db.session.query(AddressDataModel).filter_by(id=address_id).first() #Looks in the column 'id' for the given
-    # student_id number and selects the first result which is assigned to the variable, "student". Obtains
+    # address_id number and selects the first result which is assigned to the variable, "address". Obtains
     #the data in the row
 
     if not address_id: #if the table does not find the record with the corresponding id, this will run
@@ -70,3 +70,34 @@ def get_single_address(address_id):
     data = address_data_schema.dump(address) #Result from the first row is taken and added to the schema (does not update)
 
     return jsonify(data=data, status=200), 200 #Indicates success (not 201 because nothing is changed)
+
+@address_data_blueprint.route("/api/addresses/<int:address_id>", methods=["PATCH"])#To partially or fully update
+# a record based on the id of the address
+def patch_single_address(address_id):
+    data = request.json #Data sent from postman assigned to the variable 'data'
+
+    address = db.session.query(AddressDataModel).filter_by(id=address_id).first() #As explained in the "GET" method
+    if not address_id: #if the table does not find the record with the corresponding id, this will run
+        error_message = f"Student with the id {address_id} was not found "
+        return jsonify(msg=error_message, status=200), 200
+
+    try:
+        for key, value in data.items():
+            if not hasattr(AddressDataModel, key): #checks if the key value pairs in "data" has the attributes from the
+                #AddressDataModel object
+                raise ValueError
+            else:
+                setattr(address, key, value)
+                db.session.commit() #The commit function will update the table in sql
+
+
+        address = db.session.query(AddressDataModel).filter_by(id=address_id).first()
+        address_schema = AddressSchema(many=False)
+        data = address_schema.dump(address)
+
+        success_message = f"Student with ID {address.id} updated"
+        return jsonify(msg=success_message, data=data, status=200), 200 #Sucess message, no data was created
+
+    except ValueError:
+        error_message = "Error referencing columns with provided keys"
+        return jsonify(msg=error_message, status=400), 400 #Bad request
