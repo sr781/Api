@@ -8,7 +8,6 @@ address_data_blueprint = Blueprint("address_data", __name__)
 
 @address_data_blueprint.route("/api/addresses", methods=["GET", "POST"])
 def address_data_list():
-    client_interface = ClientInterface("/addresses")
 
     if request.method == "GET":
         address = db.session.query(AddressDataModel).all()
@@ -20,7 +19,6 @@ def address_data_list():
         data = address_schema.dump(address) #Stores the data obtained into the schema
         return jsonify(data=data, status=200), 200
 
-        #return jsonify(client_interface.get_list()) #Add len checker
     else:
         data = request.json #In the variable data, the request method is used to obtain data (in json format)
         try:
@@ -52,5 +50,6 @@ def address_data_list():
             return jsonify(data=data, msg=success_message, status=201), 201 #Sucess, with 201 indicating that a new
             #resource has been created
         except KeyError:
-            error_message = "Please specify the fields for address"
+            error_message = ("Please specify the fields, <student_id>, <number>, <house_name>, <road>, <city>, <state>"
+                             "<country>, <zipcode> for address")
             return jsonify(msg=error_message, status=400), 400 #Error on clients side

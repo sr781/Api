@@ -55,7 +55,9 @@ def student_data_list():
 
         except KeyError: #Error handling. A key error is just there to check if the required columns have their required
             #values
-            error_message = "Please check to make sure all the data has been added and POST again"
+            error_message = ("Please check to make sure the following fields have been added: <name>, <nationality>, <city>"
+                             "<lat>, <long>, <gender>, <age>, <english_grade>, <maths_grade>, <sciences_grade>, "
+                             "<languages_grade>")
             return jsonify(msg=error_message, status_code=400) #A 400 Error is due to something on the client side
 
 @student_data_blueprint.route("/api/students/<int:student_id>", methods=["GET"]) #To get one row based on the
