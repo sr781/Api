@@ -83,7 +83,7 @@ def patch_single_user(student_id):
     data = request.json #Data sent from postman assigned to the variable 'data'
 
     student = db.session.query(StudentDataModel).filter_by(id=student_id).first() #As explained in the "GET" method
-    if not student_id: #if the table does not find the record with the corresponding id, this will run
+    if not student: #if the table does not find the record with the corresponding id, this will run  #error here, used student_id
         error_message = f"Student with the id {student_id} was not found "
         return jsonify(msg=error_message, status=200), 200
 
@@ -111,7 +111,7 @@ def patch_single_user(student_id):
         return jsonify(msg=error_message, status=400), 400 #Bad request
 
 
-# @student_data_blueprint.route("/api/students/<int: student_id>", methods=["DELETE"]) #To delete a user
+# @student_data_blueprint.route("/api/students/<int:student_id>", methods=["DELETE"]) #To delete a user
 # def delete_single_user(student_id):
 #     student = db.session.query(StudentDataModel).filter_by(id=student_id).first() #Looks in the column 'id' for the given
 #     # student_id number and selects the first result which is assigned to the variable, "student". Obtains
