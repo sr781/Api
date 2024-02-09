@@ -1,13 +1,7 @@
 from flask import Blueprint, jsonify, request
-#from app.controllers.interface import ClientInterface
 from app.models.student_data_model import StudentDataModel
 from app.database import db
-from app.conf.constants import BASE_URL
 from app.schemas.student_data_schema import StudentSchema
-
-
-import json
-import requests
 
 student_data_blueprint = Blueprint("student_data", __name__)
 
