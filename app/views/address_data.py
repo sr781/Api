@@ -78,7 +78,7 @@ def patch_single_address(address_id):
 
     address = db.session.query(AddressDataModel).filter_by(id=address_id).first() #As explained in the "GET" method
     if not address: #if the table does not find the record with the corresponding id, this will run
-        error_message = f"Student with the id {address_id} was not found "
+        error_message = f"Address with the id {address_id} was not found "
         return jsonify(msg=error_message, status=200), 200
 
     try:
