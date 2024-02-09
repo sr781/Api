@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify, request
-#from app.controllers.interface import ClientInterface
 from app.database import db
 from app.models.student_data_model import StudentDataModel #Used to find the data for the Address
 from app.models.address_data_model import AddressDataModel
