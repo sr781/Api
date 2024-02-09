@@ -2,7 +2,6 @@
 A python project which will build an API which can add, read, edit and delete data in a database stored in mysql . This database will consist of student information and a nested address table. Postman is used to test the API by sending reqeusts. 
 
 
- ------------
 
  
 # Resources
