@@ -1,6 +1,6 @@
 """Create the structure for the student table"""
 from app.database import db #importing the db instance from the database file to be able to work with SQLAlchemy
-from app.models.address_data_model import AddressDataModel #Needed to make 'relationship' work?
+from app.models.address_data_model import AddressDataModel
 class StudentDataModel(db.Model):
 
     """The code below is the data structure for one student """

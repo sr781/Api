@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.controllers.interface import ClientInterface
+#from app.controllers.interface import ClientInterface
 from app.database import db
 from app.models.student_data_model import StudentDataModel #Used to find the data for the Address
 from app.models.address_data_model import AddressDataModel
@@ -95,7 +95,7 @@ def patch_single_address(address_id):
         address_schema = AddressSchema(many=False)
         data = address_schema.dump(address)
 
-        success_message = f"Student with ID {address.id} updated"
+        success_message = f"Address with ID {address.id} updated"
         return jsonify(msg=success_message, data=data, status=200), 200 #Sucess message, no data was created
 
     except ValueError:

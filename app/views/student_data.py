@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.controllers.interface import ClientInterface
+#from app.controllers.interface import ClientInterface
 from app.models.student_data_model import StudentDataModel
 from app.database import db
 from app.conf.constants import BASE_URL
@@ -67,7 +67,7 @@ def get_single_user(student_id):
             # student_id number and selects the first result which is assigned to the variable, "student". Obtains
             #the data in the row
 
-    if not student_id: #if the table does not find the record with the corresponding id, this will run
+    if not student: #if the table does not find the record with the corresponding id, this will run
         error_message = f"Student with the id {student_id} was not found "
         return jsonify(msg=error_message, status=200), 200 #Indicates request was successful (works fine, data was just
         # not found)
@@ -105,7 +105,9 @@ def patch_single_user(student_id):
         return jsonify(msg=success_message, data=data, status=200), 200 #Sucess message, no data was created
 
     except ValueError:
-        error_message = "Error referencing columns with provided keys"
+        error_message = ("Error referencing columns. Please check to make sure the following fields have been added:"
+                         " <name>, <nationality>, <city> <lat>, <long>, <gender>, <age>, <english_grade>, <maths_grade>,"
+                         " <sciences_grade>, <languages_grade>")
         return jsonify(msg=error_message, status=400), 400 #Bad request
 
 
@@ -126,7 +128,7 @@ def patch_single_user(student_id):
 #
 #
 #
-#     db.session.delete(new_student) #updates the database with the new student
+#     db.session.delete(student) #updates the database with the new student
 #
 #     db.session.commit() #This will save the data for the new student
 #     data = student_schema.dump(student)

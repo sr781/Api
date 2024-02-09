@@ -10,7 +10,8 @@ class StudentSchema(SQLAlchemyAutoSchema):
 
         #Fields generated with the student data model is serialised
         fields = ( "name", "nationality", "city", "lat", "long", "gender", "age", "english_grade", "maths_grade",
-                  "sciences_grade", "languages_grade", "address_data") #, "student_address_data")
+                  "sciences_grade", "languages_grade", "address_data") #The 'address_data' will contain the nested
+        #address data for that specific student based on student_id
 
 
-    address_data = ma.Nested(AddressSchema, many=False)
+    address_data = ma.Nested(AddressSchema, many=True) #Will nest the address table in the student table
