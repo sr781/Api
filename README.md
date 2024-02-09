@@ -413,6 +413,42 @@ No cookies
     "status": 200
 }
  ```
+ 
+ ##### Table nested within the Student table
+ 
+  ```
+ {
+    "data": [
+        {
+            "address_data": [
+                {
+                    "city": "London",
+                    "country": "United Kingdom",
+                    "house_name": "Bob",
+                    "id": 1,
+                    "number": 9,
+                    "road": "Cresent drive",
+                    "state": "Islington",
+                    "student_id": 1,
+                    "zipcode": "SW1 1AA"
+                }
+            ],
+            "age": 23,
+            "city": "Guildford",
+            "english_grade": 8,
+            "gender": "male",
+            "languages_grade": 7,
+            "lat": "52.11",
+            "long": "11.23",
+            "maths_grade": 6,
+            "name": "Joe Bloggs",
+            "nationality": "British",
+            "sciences_grade": 6
+        }
+    ],
+    "status": 200
+}
+ ```
 <br/>
 
 #### HTTP Status 200 Address ID Does Not Exist
@@ -461,4 +497,3 @@ No cookies
  ```
 
  ```
- 
