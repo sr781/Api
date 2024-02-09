@@ -61,7 +61,7 @@ def get_single_address(address_id):
     # address_id number and selects the first result which is assigned to the variable, "address". Obtains
     #the data in the row
 
-    if not address_id: #if the table does not find the record with the corresponding id, this will run
+    if not address: #if the table does not find the record with the corresponding id, this will run
         error_message = f"Address with the id {address_id} was not found "
         return jsonify(msg=error_message, status=200), 200 #Indicates request was successful (works fine, data was just
         # not found)
@@ -77,7 +77,7 @@ def patch_single_address(address_id):
     data = request.json #Data sent from postman assigned to the variable 'data'
 
     address = db.session.query(AddressDataModel).filter_by(id=address_id).first() #As explained in the "GET" method
-    if not address_id: #if the table does not find the record with the corresponding id, this will run
+    if not address: #if the table does not find the record with the corresponding id, this will run
         error_message = f"Student with the id {address_id} was not found "
         return jsonify(msg=error_message, status=200), 200
 
@@ -99,5 +99,6 @@ def patch_single_address(address_id):
         return jsonify(msg=success_message, data=data, status=200), 200 #Sucess message, no data was created
 
     except ValueError:
-        error_message = "Error referencing columns with provided keys"
+        error_message = "Error referencing columns, <student_id>, <number>, <house_name>, <road>, <city>, <state>"
+        "<country>, <zipcode> for address"
         return jsonify(msg=error_message, status=400), 400 #Bad request
