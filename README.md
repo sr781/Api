@@ -267,6 +267,7 @@ No cookies
   ------------
   
   <br/>
+    <br/>
   
  # Address Data
  
@@ -375,4 +376,89 @@ No cookies
 }
  ```
   ------------
+  
+## Patch ```/api/addresses/<int:address_id>```
+
+### Parameters
+Where ```<int:address_id>``` is the id of the address to be updated
+
+### Request Body
+ ```
+{
+    "house_name": "Bob",
+    "road": "Cresent drive",
+    "state": "Islington"
+}
+ ```
+### Cookies
+No cookies
+
+### Success Response
+#### HTTP Status 200
+
+ ```
+{
+    "data": {
+        "city": "London",
+        "country": "United Kingdom",
+        "house_name": "Bob",
+        "id": 1,
+        "number": 9,
+        "road": "Cresent drive",
+        "state": "Islington",
+        "student_id": 1,
+        "zipcode": "SW1 1AA"
+    },
+    "msg": "Address with ID 1 updated",
+    "status": 200
+}
+ ```
+<br/>
+
+#### HTTP Status 200 Address ID Does Not Exist
+ ```
+{
+    "msg": "Address with the id 15 was not found ",
+    "status": 200
+}
+ ```
+
+### Error Response
+
+#### HTTP Status 400 Updating Column That Does Not Exist
+
+ ```
+{
+    "msg": "Error referencing columns, <student_id>, <number>, <house_name>, <road>, <city>, <state>",
+    "status": 400
+}
+ ```
+  ------------
+ ## Delete ```/api/students/<int:address_id>```
+
+### Parameters
+Where ```<int:address_id>``` is the corresponding address id
+
+### Request Body
+ ```
+
+ ```
+### Cookies
+No cookies
+
+### Success Response
+#### HTTP Status 201
+
+ ```
+
+ ```
+<br/>
+
+### Error Response
+
+#### HTTP Status 400 Missing Field
+
+ ```
+
+ ```
  
