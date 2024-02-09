@@ -2,10 +2,12 @@
 A project which will build an API which can add, read, edit and delete data in a database. This database will consist of student information and a nested address table.
 
 # Resources
-</br>
-# Student
 
- ------------
+</br>
+
+# Student Data
+
+
 ## Post ```/api/students```
 
 ### Parameters
@@ -32,6 +34,7 @@ No cookies
 
 ### Success Response
 #### HTTP Status 201
+
  ```
 {
     "data": {
@@ -52,7 +55,9 @@ No cookies
 }
  ```
 <br/>
+
 #### HTTP Status 400 Missing Field
+
  ```
 {
     "msg": "Please check to make sure the following fields have been added: <name>, <nationality>, <city><lat>, <long>, <gender>, <age>, <english_grade>, <maths_grade>, <sciences_grade>, <languages_grade>",
