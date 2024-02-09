@@ -1,21 +1,19 @@
-#Build your own API Project
+# Build your own API Project
 A project which will build an API which can add, read, edit and delete data in a database. This database will consist of student information and a nested address table.
 
-#Resources
+# Resources
 </br>
-#Student
+# Student
 
-##Get ```/api/users ```
+## Get ```/api/users ```
 
-###Parameters
+### Parameters
 No Parameters
 
-###Request Body
+### Request Body
 No request body
 
-###Cookies
+### Cookies
 No cookies
 
-###Expected Output
-
-------------
+### Expected Output
