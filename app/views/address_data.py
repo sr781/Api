@@ -5,6 +5,7 @@ from app.models.address_data_model import AddressDataModel
 from app.schemas.address_data_schema import AddressSchema
 address_data_blueprint = Blueprint("address_data", __name__)
 
+"""Perform functions to get, update, delete or view data for the address data"""
 @address_data_blueprint.route("/api/addresses", methods=["GET", "POST"])
 def address_data_list():
 

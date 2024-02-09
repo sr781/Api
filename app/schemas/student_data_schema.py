@@ -3,7 +3,7 @@ from app.models.student_data_model import StudentDataModel
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema #automatically generate fields so all you need are column names
 from app.schemas.address_data_schema import AddressSchema
 class StudentSchema(SQLAlchemyAutoSchema):
-
+    """Create the schema for Students from the model"""
     class Meta:
 
         model = StudentDataModel #The StudentDataModel will be serialised

@@ -5,6 +5,7 @@ from app.schemas.student_data_schema import StudentSchema
 
 student_data_blueprint = Blueprint("student_data", __name__)
 
+"""Perform functions to get, update, delete or view data for the student data"""
 @student_data_blueprint.route("/api/students", methods=["GET", "POST"]) #Where this is located
 def student_data_list():
     if request.method == "GET": #To recieve all data

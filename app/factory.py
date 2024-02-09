@@ -1,4 +1,4 @@
-"""Use it to create the flask app iteself"""
+"""Use it to create the flask app itself"""
 
 
 from flask import Flask
