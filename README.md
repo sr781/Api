@@ -264,7 +264,115 @@ No cookies
 
  ```
  
+  ------------
+  
+  <br/>
+  
+ # Address Data
  
+ ## Post ```/api/addresses```
 
+### Parameters
+No Parameters
+
+### Request Body
+ ```
+{
+    "city": "London",
+    "country": "United Kingdom",
+    "house_name": "Janet",
+    "number": 9,
+    "road": "Sunshine drive",
+    "state": "Islington",
+    "student_id": 1,
+    "zipcode": "SW1 1AA"
+}
+ ```
+### Cookies
+No cookies
+
+### Success Response
+#### HTTP Status 201
+
+ ```
+{
+    "data": {
+        "city": "London",
+        "country": "United Kingdom",
+        "house_name": "Janet",
+        "number": 9,
+        "road": "Sunshine drive",
+        "state": "Islington",
+        "student_id": 1,
+        "zipcode": "SW1 1AA"
+    },
+    "msg": "New address data created for a student",
+    "status": 201
+}
+ ```
+<br/>
+
+### Error Response
+
+
+#### HTTP Status 400 Corresponding Student Not Found
+
+ ```
+{
+    "msg": "Student not found",
+    "status": 400
+}
+ ```
  
+ #### HTTP Status 400 Missing Fields
+
+ ```
+{
+    "msg": "Please specify the fields, <student_id>, <number>, <house_name>, <road>, <city>, <state><country>, <zipcode> for address",
+    "status": 400
+}
+ ```
+ 
+   ------------
+ 
+ ## Get ```/api/students/<int:address_id>```
+
+### Parameters
+Where ```<int:address_id>``` is the address ID (not to be confused with the student id which is a foreign key that links to the primary key called 'id' in the students table)
+
+### Request Body
+No requests
+
+### Cookies
+No cookies
+
+### Success Response
+#### HTTP Status 200
+
+ ```
+{
+    "data": {
+        "city": "London",
+        "country": "United Kingdom",
+        "house_name": "Janet",
+        "id": 1,
+        "number": 9,
+        "road": "Sunshine drive",
+        "state": "Islington",
+        "student_id": 1,
+        "zipcode": "SW1 1AA"
+    },
+    "status": 200
+}
+ ```
+<br/>
+#### HTTP Status 200 Address Not Found
+
+ ```
+{
+    "msg": "Address with the id 5 was not found ",
+    "status": 200
+}
+ ```
+  ------------
  
