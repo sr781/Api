@@ -56,6 +56,8 @@ No cookies
  ```
 <br/>
 
+### Error Response
+
 #### HTTP Status 400 Missing Field
 
  ```
@@ -174,7 +176,95 @@ No cookies
     "status": 200
 }
  ```
+## Patch ```/api/students/<int:student_id>```
 
+### Parameters
+Where ```<int:student_id>``` is a student id
+
+### Request Body
+ ```
+{
+    "age": 28,
+    "city": "London",
+    "languages_grade": 4
+}
+ ```
+### Cookies
+No cookies
+
+### Success Response
+#### HTTP Status 200
+
+ ```
+{
+    "data": {
+        "address_data": [],
+        "age": 28,
+        "city": "London",
+        "english_grade": 8,
+        "gender": "male",
+        "languages_grade": 4,
+        "lat": "52.11",
+        "long": "11.23",
+        "maths_grade": 6,
+        "name": "Joe Bloggs",
+        "nationality": "British",
+        "sciences_grade": 6
+    },
+    "msg": "Student with ID 1 updated",
+    "status": 200
+}
+ ```
+<br/>
+
+#### HTTP Status 200 Student ID Does Not Exist
+ ```
+{
+    "msg": "Student with the id 5 was not found ",
+    "status": 200
+}
+ ```
+
+### Error Response
+
+#### HTTP Status 400 Updating Column That Does Not Exist
+
+ ```
+{
+    "msg": "Error referencing columns. Please check to make sure the following fields have been added: <name>, <nationality>, <city> <lat>, <long>, <gender>, <age>, <english_grade>, <maths_grade>, <sciences_grade>, <languages_grade>",
+    "status": 400
+}
+ ```
+  ------------
+## Delete ```/api/students/<int:student_id>```
+
+### Parameters
+Where ```<int:student_id>``` is a student id
+
+### Request Body
+ ```
+
+ ```
+### Cookies
+No cookies
+
+### Success Response
+#### HTTP Status 201
+
+ ```
+
+ ```
+<br/>
+
+### Error Response
+
+#### HTTP Status 400 Missing Field
+
+ ```
+
+ ```
+ 
+ 
 
  
  
